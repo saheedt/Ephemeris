@@ -5,6 +5,7 @@
     "lint": "eslint --fix client"
   },
   "dependencies": {
+    "babel-preset-react": "^6.24.1",
     "@rails/webpacker": "3.5",
     "prop-types": "^15.6.2",
     "react": "^16.6.3",
@@ -12,7 +13,6 @@
   },
   "devDependencies": {
     "babel-eslint": "^10.0.1",
-    "babel-preset-react": "^6.24.1",
     "eslint": "^5.9.0",
     "eslint-config-airbnb-base": "^13.1.0",
     "eslint-plugin-import": "^2.14.0",
