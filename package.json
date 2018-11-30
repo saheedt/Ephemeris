@@ -1,15 +1,22 @@
 {
   "name": "ephemeris",
   "private": true,
+  "scripts": {
+    "lint": "eslint --fix client"
+  },
   "dependencies": {
     "@rails/webpacker": "3.5",
-    "babel-preset-react": "^6.24.1",
     "prop-types": "^15.6.2",
     "react": "^16.6.3",
     "react-dom": "^16.6.3"
   },
   "devDependencies": {
     "babel-eslint": "^10.0.1",
+    "babel-preset-react": "^6.24.1",
+    "eslint": "^5.9.0",
+    "eslint-config-airbnb-base": "^13.1.0",
+    "eslint-plugin-import": "^2.14.0",
+    "eslint-plugin-react": "^7.11.1",
     "webpack-dev-server": "2.11.2"
   }
 }
