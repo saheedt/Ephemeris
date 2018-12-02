@@ -33,3 +33,15 @@ yarn-debug.log*
 
 # Ignore Procfile
 Procfile
+
+### RubyMine ###
+# Covers JetBrains IDEs: IntelliJ, RubyMine, PhpStorm, AppCode, PyCharm, CLion, Android Studio and WebStorm
+# Reference: https://intellij-support.jetbrains.com/hc/en-us/articles/206544839
+
+# User-specific stuff
+.idea/
+
+# General
+.DS_Store
+.AppleDouble
+.LSOverride
