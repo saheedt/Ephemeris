@@ -12,10 +12,26 @@ This application makes use of a postgreSQL database
 This application is bootstrapped with webpack to use `REACT` as the frontend framework. The frontend code can be found in the client folder at the root of the application
 
 #### LINTING
-Rubocop is to be used to lint all the ruby code.
+**Rubocop** is to be used to lint all the ruby code.
+
+To lint all ruby code, from root directory run `rubocop`
+
+To lint specific file(s), run
+```
+rubocop path/to/file
+```
+or  
+```
+rubocop path/to/file-1 path/to/file-2 ...path/to/file-n
+```
+
+To autofix all lint issues, run rubocop in autocorrect mode with 
+```
+rubocop -a
+```
 
 
-Eslint is used to lint all the reactJS files(Frontend code is in the client folder). To fix auto-fixable errors using eslint run:
+**Eslint** is used to lint all the reactJS files(Frontend code is in the client folder). To fix auto-fixable errors using eslint run:
 ````
 npm run lint
 ````
