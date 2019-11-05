@@ -3,6 +3,7 @@ Rails.application.routes.draw do
     mount GraphiQL::Rails::Engine, at: "/graphiql", graphql_path: "/graphql"
   end
   post "/graphql", to: "graphql#execute"
+
   root to: 'home#index'
 
   # This should be the last route to be defined as it is meant to
