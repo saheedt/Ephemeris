@@ -49,3 +49,5 @@ Procfile
 .DS_Store
 .AppleDouble
 .LSOverride
+.generators
+.rakeTasks
