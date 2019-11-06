@@ -5,12 +5,11 @@ class Mutations::CreateUser < Mutations::BaseMutation
   argument :screen_name, String, required: true
   argument :name, String, required: false
 
-  field :user, Types::UserType, null: false
-  field :token, String, null: false
-  field :errors, [String], null: false
+  field :user, Types::UserType, null: true
+  field :token, String, null: true
+  field :errors, [String], null: true
 
   def resolve(email:, password:, password_confirmation:, screen_name:, name:)
-    # fix silent DB rollback creating duplicate user
     UsersHelper::Users.create(email, password, password_confirmation, screen_name, name)
   end
 end

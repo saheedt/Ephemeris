@@ -7,7 +7,7 @@ module UsersHelper
         {
           user: user,
           token: Jwt.encode(user),
-          errors: []
+          errors: nil
         }
       else
         {
