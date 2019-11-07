@@ -5,9 +5,9 @@
     "lint": "eslint --fix client"
   },
   "dependencies": {
-    "babel-preset-react": "^6.24.1",
     "@rails/webpacker": "3.5",
     "axios": "^0.18.0",
+    "babel-preset-react": "^6.24.1",
     "prop-types": "^15.6.2",
     "react": "^16.6.3",
     "react-dom": "^16.6.3",
