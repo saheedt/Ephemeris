@@ -80,6 +80,10 @@ test:
 #
 production:
   <<: *default
-  database: ephemeris_production
-  username: ephemeris
-  password: <%= ENV['EPHEMERIS_DATABASE_PASSWORD'] %>
+  url: <%= ENV['DATABASE_URL'] %>
+#  The above line "<%= ENV['DATABASE_URL'] %>" adds database url provided by heroku
+#  in temp production env.
+
+#  database: ephemeris_production
+#  username: ephemeris
+#  password: <%= ENV['EPHEMERIS_DATABASE_PASSWORD'] %>
