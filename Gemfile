@@ -44,6 +44,8 @@ gem 'graphql'
 group :development, :test do
   # Call 'byebug' anywhere in the code to stop execution and get a debugger console
   gem 'byebug', platforms: [:mri, :mingw, :x64_mingw]
+  # Factory bots installation
+  gem 'factory_bot_rails'
   gem "rspec-rails"
   # Rspec test formatter
   gem 'rspec_junit_formatter'
