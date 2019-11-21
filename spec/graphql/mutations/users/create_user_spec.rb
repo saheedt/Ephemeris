@@ -9,7 +9,7 @@ module Mutations
                    password_confirmation: "testingtester", name: "Test A"}
 
           post '/graphql', params: { query: graphQuery(user) }
-          
+
           json = JSON.parse(response.body)
           data = json['data']['createUser']
 
