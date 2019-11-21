@@ -70,7 +70,7 @@ jobs: # a collection of steps
                               --out test_results/rspec.xml \
                               --format progress \
                               -- ${TESTFILES}
-            cc-test-reporter format-coverage -t simplecov -o codeclimate.backend.json coverage/backend/.resultset.json
+            ./cc-test-reporter format-coverage -t simplecov -o codeclimate.backend.json coverage/backend/.resultset.json
 
       - store_test_results: # Upload test results for display in Test Summary: https://circleci.com/docs/2.0/collect-test-data/
           path: test_results
@@ -121,10 +121,10 @@ jobs: # a collection of steps
             bin/rails db:schema:load --trace
 
       - run:
-        name: Run frontend test
-        command: |
-          yarn test
-          cc-test-reporter format-coverage -t lcov -o codeclimate.frontend.json coverage/frontend/lcov.info
+          name: Run frontend test
+          command: |
+            yarn test
+            ./cc-test-reporter format-coverage -t lcov -o codeclimate.frontend.json coverage/frontend/lcov.info
 
 
       # Save test results for timing analysis
@@ -141,8 +141,8 @@ jobs: # a collection of steps
       - run:
           name: Upload coverage results to Code Climate
           command: |
-            cc-test-reporter sum-coverage codeclimate.*.json -p 2 -o codeclimate.total.json
-            cc-test-reporter upload-coverage -i codeclimate.total.json
+            ./cc-test-reporter sum-coverage codeclimate.*.json -p 2 -o codeclimate.total.json
+            ./cc-test-reporter upload-coverage -i codeclimate.total.json
 
 
 workflows:
