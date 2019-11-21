@@ -3,7 +3,7 @@ defaults: &defaults
   parallelism: 3 # run three instances of this job in parallel
   working_directory: ~/ephemeris
   docker: # run the steps with Docker
-    - image: circleci/ruby:2.5.1-jessie-node # ...with this image as the primary container; this is where all `steps` will run
+    - image: circleci/ruby:2.5.1-node # ...with this image as the primary container; this is where all `steps` will run
       environment: # environment variables for primary container
         BUNDLE_JOBS: 3
         BUNDLE_RETRY: 3
