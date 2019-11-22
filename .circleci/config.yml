@@ -130,7 +130,7 @@ jobs: # a collection of steps
           name: Run frontend test
           command: |
             yarn test
-            ./cc-test-reporter format-coverage -t lcov -o codeclimate.frontend.json coverage/frontend/lcov.info
+            ./cc-test-reporter format-coverage -t lcov -o codeclimate.frontend.json coverage/lcov.info
 
 
       # Save test results for timing analysis
