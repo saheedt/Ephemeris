@@ -145,6 +145,12 @@ jobs: # a collection of steps
 
     steps:
       - run:
+          name: Install Code Climate Test Reporter
+          command: |
+            curl -L https://codeclimate.com/downloads/test-reporter/test-reporter-latest-linux-amd64 > ./cc-test-reporter
+            chmod +x ./cc-test-reporter
+
+      - run:
           name: Upload coverage results to Code Climate
           command: |
             ./cc-test-reporter sum-coverage codeclimate.*.json -p 2 -o codeclimate.total.json
