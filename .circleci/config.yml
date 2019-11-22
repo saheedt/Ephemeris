@@ -26,12 +26,6 @@ jobs: # a collection of steps
           environment:
             DOCKERIZE_VERSION: v0.6.1
 
-      - run:
-          name: Install Code Climate Test Reporter
-          command: |
-            curl -L https://codeclimate.com/downloads/test-reporter/test-reporter-latest-linux-amd64 > ./cc-test-reporter
-            chmod +x ./cc-test-reporter
-
   backend-tests:
     <<: *defaults
     steps:
@@ -60,6 +54,12 @@ jobs: # a collection of steps
           command: |
             bin/rails db:create
             bin/rails db:schema:load --trace
+
+      - run:
+          name: Install Code Climate Test Reporter
+          command: |
+            curl -L https://codeclimate.com/downloads/test-reporter/test-reporter-latest-linux-amd64 > ./cc-test-reporter
+            chmod +x ./cc-test-reporter
 
       - run:
           name: Run rspec in parallel
@@ -119,6 +119,12 @@ jobs: # a collection of steps
           command: |
             bin/rails db:create
             bin/rails db:schema:load --trace
+
+      - run:
+          name: Install Code Climate Test Reporter
+          command: |
+            curl -L https://codeclimate.com/downloads/test-reporter/test-reporter-latest-linux-amd64 > ./cc-test-reporter
+            chmod +x ./cc-test-reporter
 
       - run:
           name: Run frontend test
