@@ -6,7 +6,7 @@ module UsersHelper
       if user.save
         {
           user: user,
-          token: Jwt.encode(user),
+          token: AuthHelper::Jwt.encode(user),
           errors: nil
         }
       else
