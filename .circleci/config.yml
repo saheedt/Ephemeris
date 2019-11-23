@@ -75,7 +75,7 @@ jobs: # a collection of steps
       - persist_to_workspace:
           root: coverage
           paths:
-            - codeclimate.*.json
+            - codeclimate.backend.json
 
       - store_test_results: # Upload test results for display in Test Summary: https://circleci.com/docs/2.0/collect-test-data/
           path: test_results
@@ -140,7 +140,7 @@ jobs: # a collection of steps
       - persist_to_workspace:
           root: coverage
           paths:
-            - codeclimate.*.json
+            - codeclimate.frontend.json
 
       # Save test results for timing analysis
       - store_test_results: # Upload test results for display in Test Summary: https://circleci.com/docs/2.0/collect-test-data/
