@@ -162,7 +162,7 @@ jobs: # a collection of steps
       - run:
           name: Sum coverage results
           command: |
-            ./cc-test-reporter sum-coverage coverage/codeclimate.backend.json coverage/codeclimate.frontend.json -p 2 -o coverage/codeclimate.total.json --debug
+            ./cc-test-reporter sum-coverage coverage/codeclimate.*.json coverage/codeclimate.*.json -p 2 -o coverage/codeclimate.total.json --debug
 #            ./cc-test-reporter upload-coverage -i coverage/codeclimate.total.json
 
       - persist_to_workspace:
