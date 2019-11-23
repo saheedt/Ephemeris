@@ -142,7 +142,6 @@ jobs: # a collection of steps
           paths:
             - codeclimate.*.json
 
-
       # Save test results for timing analysis
       - store_test_results: # Upload test results for display in Test Summary: https://circleci.com/docs/2.0/collect-test-data/
           path: test_results
@@ -161,10 +160,19 @@ jobs: # a collection of steps
             chmod +x ./cc-test-reporter
 
       - run:
-          name: Upload coverage results to Code Climate
+          name: Sum coverage results
           command: |
             ./cc-test-reporter sum-coverage coverage/codeclimate.backend.json coverage/codeclimate.frontend.json -p 2 -o coverage/codeclimate.total.json
-            ./cc-test-reporter upload-coverage -i coverage/codeclimate.total.json
+#            ./cc-test-reporter upload-coverage -i coverage/codeclimate.total.json
+
+      - persist_to_workspace:
+          root: coverage
+          paths:
+            - codeclimate.total.json
+
+      - run:
+          name: Upload coverage results to Code Climate
+          command: ./cc-test-reporter upload-coverage -i coverage/codeclimate.total.json
 
 
 workflows:
