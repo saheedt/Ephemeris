@@ -15,8 +15,7 @@ defaults: &defaults
       environment: # environment variables for database
         POSTGRES_USER: ""
         POSTGRES_DB: ephemeris_test
-  #     POSTGRES_PASSWORD: ""
-#  CIRCLE_WORKING_DIRECTORY
+
 jobs: # a collection of steps
   build: # runs not using work flows must have a `build` job as entry point
     <<: *defaults
@@ -27,26 +26,9 @@ jobs: # a collection of steps
           environment:
             DOCKERIZE_VERSION: v0.6.1
 
-#      - run:
-#          name: Create genera coverage folder
-#          command: mkdir ~/ephemeris/coverage
-
-#      - run:
-#          name: Install Code Climate Test Reporter
-#          command: |
-#            curl -L https://codeclimate.com/downloads/test-reporter/test-reporter-latest-linux-amd64 > ./cc-test-reporter
-#            chmod +x ./cc-test-reporter
-#
-#      - persist_to_workspace:
-#          root: ~/ephemeris
-#          paths:
-#            - coverage
-
   backend-tests:
     <<: *defaults
     steps:
-#      - attach_workspace:
-#          at: ~/ephemeris
 
       - checkout # special step to check out source code to working directory
 
@@ -91,9 +73,6 @@ jobs: # a collection of steps
                               --format progress \
                               -- ${TESTFILES}
             ./cc-test-reporter format-coverage -t simplecov -o ~/ephemeris/codeclimate.backend.json
-            echo "general coverage after backend format >>>"
-            ls ~/ephemeris
-#            coverage/backend/.resultset.json
 
       - persist_to_workspace:
           root: ~/ephemeris
@@ -112,8 +91,6 @@ jobs: # a collection of steps
   frontend-tests:
     <<: *defaults
     steps:
-#      - attach_workspace:
-#          at: ~/ephemeris
 
       - checkout # special step to check out source code to working directory
 
@@ -168,29 +145,15 @@ jobs: # a collection of steps
           command: |
             yarn test
             ./cc-test-reporter format-coverage -t lcov -o ~/ephemeris/codeclimate.frontend.json
-            echo "show general coverage after frontend test"
-            ls ~/ephemeris
-#            coverage/lcov.info
 
       - persist_to_workspace:
           root: ~/ephemeris
           paths:
             - codeclimate.frontend.json
 
-      - run:
-          name: After frontend persist
-          command: |
-            ls ~/ephemeris
-
-      # Save test results for timing analysis
-#      - store_test_results: # Upload test results for display in Test Summary: https://circleci.com/docs/2.0/collect-test-data/
-#          path: test_results
-      # See https://circleci.com/docs/2.0/deployment-integrations/ for example deploy configs
 
   upload-coverage:
     <<: *defaults
-#    environment:
-#      - CC_TEST_REPORTER_ID: $CC_TEST_REPORTER_ID
 
     steps:
       - attach_workspace:
@@ -205,13 +168,8 @@ jobs: # a collection of steps
       - run:
           name: Sum coverage results
           command: |
-            echo "before summation >>>"
-            ls ~/ephemeris
             echo "export CC_TEST_REPORTER_ID=${CC_TEST_REPORTER_ID}" >> $BASH_ENV
             ./cc-test-reporter sum-coverage ~/ephemeris/codeclimate.backend.json ~/ephemeris/codeclimate.frontend.json -p 2 -o ~/ephemeris/codeclimate.total.json --debug
-            echo "after summation >>>"
-            ls ~/ephemeris
-#            ./cc-test-reporter upload-coverage -i coverage/codeclimate.total.json
 
       - persist_to_workspace:
           root: ~/ephemeris
@@ -221,8 +179,6 @@ jobs: # a collection of steps
       - run:
           name: Upload coverage results to Code Climate
           command: |
-            echo "show coverage content before upload >>>"
-            ls ~/ephemeris
             ./cc-test-reporter upload-coverage -i ~/ephemeris/codeclimate.total.json --debug
 
 
