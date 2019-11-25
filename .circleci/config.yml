@@ -26,10 +26,25 @@ jobs: # a collection of steps
           environment:
             DOCKERIZE_VERSION: v0.6.1
 
+      - run:
+          name: Install Code Climate Test Reporter
+          command: |
+            curl -L https://codeclimate.com/downloads/test-reporter/test-reporter-latest-linux-amd64 > ./cc-test-reporter
+            chmod +x ./cc-test-reporter
+
+      - persist_to_workspace:
+          root: ./
+          paths:
+            - cc-test-reporter
+
   backend-tests:
     <<: *defaults
     steps:
+      - attach_workspace:
+          at: ~/epemeris
+
       - checkout # special step to check out source code to working directory
+      -
       - restore_cache:
           keys:
             - ephemeris-bundle-v2-{{ checksum "Gemfile.lock" }}
@@ -55,11 +70,11 @@ jobs: # a collection of steps
             bin/rails db:create
             bin/rails db:schema:load --trace
 
-      - run:
-          name: Install Code Climate Test Reporter
-          command: |
-            curl -L https://codeclimate.com/downloads/test-reporter/test-reporter-latest-linux-amd64 > ./cc-test-reporter
-            chmod +x ./cc-test-reporter
+#      - run:
+#          name: Install Code Climate Test Reporter
+#          command: |
+#            curl -L https://codeclimate.com/downloads/test-reporter/test-reporter-latest-linux-amd64 > ./cc-test-reporter
+#            chmod +x ./cc-test-reporter
 
       - run:
           name: Run rspec in parallel
@@ -84,7 +99,11 @@ jobs: # a collection of steps
   frontend-tests:
     <<: *defaults
     steps:
+      - attach_workspace:
+          at: ~/epemeris
+
       - checkout # special step to check out source code to working directory
+
       - restore_cache:
           keys:
             - ephemeris-bundle-v2-{{ checksum "Gemfile.lock" }}
@@ -125,11 +144,11 @@ jobs: # a collection of steps
             bin/rails db:create
             bin/rails db:schema:load --trace
 
-      - run:
-          name: Install Code Climate Test Reporter
-          command: |
-            curl -L https://codeclimate.com/downloads/test-reporter/test-reporter-latest-linux-amd64 > ./cc-test-reporter
-            chmod +x ./cc-test-reporter
+#      - run:
+#          name: Install Code Climate Test Reporter
+#          command: |
+#            curl -L https://codeclimate.com/downloads/test-reporter/test-reporter-latest-linux-amd64 > ./cc-test-reporter
+#            chmod +x ./cc-test-reporter
 
       - run:
           name: Run frontend test
@@ -153,20 +172,23 @@ jobs: # a collection of steps
       - CC_TEST_REPORTER_ID: <%= ENV['CC_TEST_REPORTER_ID'] %>
 
     steps:
-      - run:
-          name: Install Code Climate Test Reporter
-          command: |
-            curl -L https://codeclimate.com/downloads/test-reporter/test-reporter-latest-linux-amd64 > ./cc-test-reporter
-            chmod +x ./cc-test-reporter
+      - attach_workspace:
+          at: ~/epemeris
+
+#      - run:
+#          name: Install Code Climate Test Reporter
+#          command: |
+#            curl -L https://codeclimate.com/downloads/test-reporter/test-reporter-latest-linux-amd64 > ./cc-test-reporter
+#            chmod +x ./cc-test-reporter
 
       - run:
           name: Sum coverage results
           command: |
-            ./cc-test-reporter sum-coverage coverage/codeclimate.*.json coverage/codeclimate.*.json -p 2 -o coverage/codeclimate.total.json --debug
+            ./cc-test-reporter sum-coverage coverage/codeclimate.*.json coverage/codeclimate.*.json -p 2 -o ./codeclimate.total.json --debug
 #            ./cc-test-reporter upload-coverage -i coverage/codeclimate.total.json
 
       - persist_to_workspace:
-          root: coverage
+          root: ./
           paths:
             - codeclimate.total.json
 
