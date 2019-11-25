@@ -44,7 +44,7 @@ jobs: # a collection of steps
           at: ~/epemeris
 
       - checkout # special step to check out source code to working directory
-      -
+
       - restore_cache:
           keys:
             - ephemeris-bundle-v2-{{ checksum "Gemfile.lock" }}
