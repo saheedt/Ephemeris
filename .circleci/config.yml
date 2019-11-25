@@ -27,9 +27,9 @@ jobs: # a collection of steps
           environment:
             DOCKERIZE_VERSION: v0.6.1
 
-      - run:
-          name: Create genera coverage folder
-          command: mkdir ~/ephemeris/coverage
+#      - run:
+#          name: Create genera coverage folder
+#          command: mkdir ~/ephemeris/coverage
 
 #      - run:
 #          name: Install Code Climate Test Reporter
@@ -90,20 +90,20 @@ jobs: # a collection of steps
                               --out test_results/rspec.xml \
                               --format progress \
                               -- ${TESTFILES}
-            ./cc-test-reporter format-coverage -t simplecov -o ~/ephemeris/coverage/codeclimate.backend.json
+            ./cc-test-reporter format-coverage -t simplecov -o ~/ephemeris/codeclimate.backend.json
             echo "general coverage after backend format >>>"
-            ls ~/ephemeris/coverage/
+            ls ~/ephemeris
 #            coverage/backend/.resultset.json
 
       - persist_to_workspace:
-          root: ~/ephemeris/coverage
+          root: ~/ephemeris
           paths:
             - codeclimate.backend.json
 
       - run:
           name: After backend persist
           command: |
-            ls ~/ephemeris/coverage/
+            ls ~/ephemeris
 
       - store_test_results: # Upload test results for display in Test Summary: https://circleci.com/docs/2.0/collect-test-data/
           path: test_results
@@ -167,20 +167,20 @@ jobs: # a collection of steps
           name: Run frontend test
           command: |
             yarn test
-            ./cc-test-reporter format-coverage -t lcov -o ~/ephemeris/coverage/codeclimate.frontend.json
+            ./cc-test-reporter format-coverage -t lcov -o ~/ephemeris/codeclimate.frontend.json
             echo "show general coverage after frontend test"
-            ls ~/ephemeris/coverage
+            ls ~/ephemeris
 #            coverage/lcov.info
 
       - persist_to_workspace:
-          root: ~/ephemeris/coverage
+          root: ~/ephemeris
           paths:
             - codeclimate.frontend.json
 
       - run:
           name: After frontend persist
           command: |
-            ls ~/ephemeris/coverage
+            ls ~/ephemeris
 
       # Save test results for timing analysis
 #      - store_test_results: # Upload test results for display in Test Summary: https://circleci.com/docs/2.0/collect-test-data/
@@ -206,14 +206,14 @@ jobs: # a collection of steps
           name: Sum coverage results
           command: |
             echo "before summation >>>"
-            ls ~/ephemeris/coverage
-            ./cc-test-reporter sum-coverage ~/ephemeris/coverage/codeclimate.backend.json ~/ephemeris/coverage/codeclimate.frontend.json -p 2 -o ~/ephemeris/coverage/codeclimate.total.json --debug
+            ls ~/ephemeris
+            ./cc-test-reporter sum-coverage ~/ephemeris/codeclimate.backend.json ~/ephemeris/codeclimate.frontend.json -p 2 -o ~/ephemeris/codeclimate.total.json --debug
             echo "after summation >>>"
-            ls ~/ephemeris/coverage
+            ls ~/ephemeris
 #            ./cc-test-reporter upload-coverage -i coverage/codeclimate.total.json
 
       - persist_to_workspace:
-          root: ~/ephemeris/coverage
+          root: ~/ephemeris
           paths:
             - codeclimate.total.json
 
@@ -221,8 +221,8 @@ jobs: # a collection of steps
           name: Upload coverage results to Code Climate
           command: |
             "show coverage content before upload >>>"
-            ls ~/ephemeris/coverage
-            ./cc-test-reporter upload-coverage -i ~/ephemeris/coverage/codeclimate.total.json --debug
+            ls ~/ephemeris
+            ./cc-test-reporter upload-coverage -i ~/ephemeris/codeclimate.total.json --debug
 
 
 workflows:
