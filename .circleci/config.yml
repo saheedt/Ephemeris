@@ -189,8 +189,8 @@ jobs: # a collection of steps
 
   upload-coverage:
     <<: *defaults
-    environment:
-      - CC_TEST_REPORTER_ID: $CC_TEST_REPORTER_ID
+#    environment:
+#      - CC_TEST_REPORTER_ID: $CC_TEST_REPORTER_ID
 
     steps:
       - attach_workspace:
@@ -207,6 +207,7 @@ jobs: # a collection of steps
           command: |
             echo "before summation >>>"
             ls ~/ephemeris
+            echo "export CC_TEST_REPORTER_ID=${CC_TEST_REPORTER_ID}" >> $BASH_ENV
             ./cc-test-reporter sum-coverage ~/ephemeris/codeclimate.backend.json ~/ephemeris/codeclimate.frontend.json -p 2 -o ~/ephemeris/codeclimate.total.json --debug
             echo "after summation >>>"
             ls ~/ephemeris
