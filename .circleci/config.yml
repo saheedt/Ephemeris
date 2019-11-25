@@ -190,7 +190,7 @@ jobs: # a collection of steps
   upload-coverage:
     <<: *defaults
     environment:
-      - CC_TEST_REPORTER_ID: <%= ENV['CC_TEST_REPORTER_ID'] %>
+      - CC_TEST_REPORTER_ID: $CC_TEST_REPORTER_ID
 
     steps:
       - attach_workspace:
