@@ -45,10 +45,10 @@ jobs: # a collection of steps
   backend-tests:
     <<: *defaults
     steps:
-      - attach_workspace:
-          at: ~/ephemeris
+#      - attach_workspace:
+#          at: ~/ephemeris
 
-#      - checkout # special step to check out source code to working directory
+      - checkout # special step to check out source code to working directory
 
       - restore_cache:
           keys:
@@ -112,10 +112,10 @@ jobs: # a collection of steps
   frontend-tests:
     <<: *defaults
     steps:
-      - attach_workspace:
-          at: ~/ephemeris
+#      - attach_workspace:
+#          at: ~/ephemeris
 
-#      - checkout # special step to check out source code to working directory
+      - checkout # special step to check out source code to working directory
 
       - restore_cache:
           keys:
