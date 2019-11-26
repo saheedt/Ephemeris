@@ -1,3 +1,7 @@
+[![CircleCI](https://circleci.com/gh/saheedt/Ephemeris/tree/develop.svg?style=svg)](https://circleci.com/gh/saheedt/Ephemeris/tree/develop)
+[![Maintainability](https://api.codeclimate.com/v1/badges/c12792e08691cac7adfb/maintainability)](https://codeclimate.com/github/saheedt/Ephemeris/maintainability)
+[![Test Coverage](https://api.codeclimate.com/v1/badges/c12792e08691cac7adfb/test_coverage)](https://codeclimate.com/github/saheedt/Ephemeris/test_coverage)
+
 # EPHEMERIS
 
 Ephemeris is a journal-like app that could be used by all
