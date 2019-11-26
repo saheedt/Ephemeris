@@ -29,8 +29,8 @@ jobs: # a collection of steps
       - run:
           name: Install Code Climate Test Reporter
           command: |
-            curl -L https://codeclimate.com/downloads/test-reporter/test-reporter-latest-linux-amd64 > ./cc-test-reporter
-            chmod +x ./cc-test-reporter
+            curl -L https://codeclimate.com/downloads/test-reporter/test-reporter-latest-linux-amd64 > ~/ephemeris/cc-test-reporter
+            chmod +x ~/ephemeris/cc-test-reporter
 
       - persist_to_workspace:
           root: ~/ephemeris
@@ -83,17 +83,12 @@ jobs: # a collection of steps
                               --out test_results/rspec.xml \
                               --format progress \
                               -- ${TESTFILES}
-            ./cc-test-reporter format-coverage -t simplecov -o ~/ephemeris/codeclimate.backend.json
+            ~/ephemeris/cc-test-reporter format-coverage -t simplecov -o ~/ephemeris/codeclimate.backend.json
 
       - persist_to_workspace:
           root: ~/ephemeris
           paths:
             - codeclimate.backend.json
-
-      - run:
-          name: After backend persist
-          command: |
-            ls ~/ephemeris
 
       - store_test_results: # Upload test results for display in Test Summary: https://circleci.com/docs/2.0/collect-test-data/
           path: test_results
@@ -155,7 +150,7 @@ jobs: # a collection of steps
           name: Run frontend test
           command: |
             yarn test
-            ./cc-test-reporter format-coverage -t lcov -o ~/ephemeris/codeclimate.frontend.json
+            ~/ephemeris/cc-test-reporter format-coverage -t lcov -o ~/ephemeris/codeclimate.frontend.json
 
       - persist_to_workspace:
           root: ~/ephemeris
@@ -180,7 +175,7 @@ jobs: # a collection of steps
           name: Sum coverage results
           command: |
             echo "export CC_TEST_REPORTER_ID=${CC_TEST_REPORTER_ID}" >> $BASH_ENV
-            ./cc-test-reporter sum-coverage ~/ephemeris/codeclimate.backend.json ~/ephemeris/codeclimate.frontend.json -p 2 -o ~/ephemeris/codeclimate.total.json --debug
+            ~/ephemeris/cc-test-reporter sum-coverage ~/ephemeris/codeclimate.backend.json ~/ephemeris/codeclimate.frontend.json -p 2 -o ~/ephemeris/codeclimate.total.json --debug
 
       - persist_to_workspace:
           root: ~/ephemeris
@@ -190,7 +185,7 @@ jobs: # a collection of steps
       - run:
           name: Upload coverage results to Code Climate
           command: |
-            ./cc-test-reporter upload-coverage -i ~/ephemeris/codeclimate.total.json --debug
+            ~/ephemeris/cc-test-reporter upload-coverage -i ~/ephemeris/codeclimate.total.json --debug
 
 
 workflows:
