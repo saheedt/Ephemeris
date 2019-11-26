@@ -1,0 +1,194 @@
+version: 2 # use CircleCI 2.0
+defaults: &defaults
+  parallelism: 3 # run three instances of this job in parallel
+  working_directory: ~/ephemeris
+  docker: # run the steps with Docker
+    - image: circleci/ruby:2.5.1-node # ...with this image as the primary container; this is where all `steps` will run
+      environment: # environment variables for primary container
+        BUNDLE_JOBS: 3
+        BUNDLE_RETRY: 3
+        BUNDLE_PATH: vendor/bundle
+        PGHOST: 127.0.0.1
+        PGUSER: postgres
+        RAILS_ENV: test
+    - image: circleci/postgres:9.5-alpine # database image
+      environment: # environment variables for database
+        POSTGRES_USER: ""
+        POSTGRES_DB: ephemeris_test
+
+jobs: # a collection of steps
+  build: # runs not using work flows must have a `build` job as entry point
+    <<: *defaults
+    steps: # a collection of executable commands
+      - run:
+          name: Install Dockerize
+          command: wget https://github.com/jwilder/dockerize/releases/download/$DOCKERIZE_VERSION/dockerize-linux-amd64-$DOCKERIZE_VERSION.tar.gz && sudo tar -C /usr/local/bin -xzvf dockerize-linux-amd64-$DOCKERIZE_VERSION.tar.gz && rm dockerize-linux-amd64-$DOCKERIZE_VERSION.tar.gz
+          environment:
+            DOCKERIZE_VERSION: v0.6.1
+
+      - run:
+          name: Install Code Climate Test Reporter
+          command: |
+            curl -L https://codeclimate.com/downloads/test-reporter/test-reporter-latest-linux-amd64 > ~/ephemeris/cc-test-reporter
+            chmod +x ~/ephemeris/cc-test-reporter
+
+      - persist_to_workspace:
+          root: ~/ephemeris
+          paths:
+            - cc-test-reporter
+
+  backend-tests:
+    <<: *defaults
+    steps:
+
+      - checkout # special step to check out source code to working directory
+
+      - attach_workspace:
+          at: ~/ephemeris
+
+      - restore_cache:
+          keys:
+            - ephemeris-bundle-v2-{{ checksum "Gemfile.lock" }}
+            - ephemeris-bundle-v2-
+
+      - run: # Install Ruby dependencies
+          name: Bundle Install
+          command: bundle install --path vendor/bundle
+
+      # Store bundle cache for Ruby dependencies
+      - save_cache:
+          key: ephemeris-bundle-v2-{{ checksum "Gemfile.lock" }}
+          paths:
+            - vendor/bundle
+
+      - run:
+          name: Wait for DB
+          command: dockerize -wait tcp://localhost:5432 -timeout 1m
+
+      - run:
+          name: Database setup
+          command: |
+            bin/rails db:create
+            bin/rails db:schema:load --trace
+
+      - run:
+          name: Run rspec in parallel
+          command: |
+            TESTFILES=$(circleci tests glob "spec/**/*_spec.rb" | circleci tests split --split-by=timings)
+            bundle exec rspec --profile 10 \
+                              --format RspecJunitFormatter \
+                              --out test_results/rspec.xml \
+                              --format progress \
+                              -- ${TESTFILES}
+            ~/ephemeris/cc-test-reporter format-coverage -t simplecov -o ~/ephemeris/codeclimate.backend.json
+
+      - persist_to_workspace:
+          root: ~/ephemeris
+          paths:
+            - codeclimate.backend.json
+
+      - store_test_results: # Upload test results for display in Test Summary: https://circleci.com/docs/2.0/collect-test-data/
+          path: test_results
+
+
+  frontend-tests:
+    <<: *defaults
+    steps:
+
+      - checkout # special step to check out source code to working directory
+
+      - attach_workspace:
+          at: ~/ephemeris
+
+      - restore_cache:
+          keys:
+            - ephemeris-bundle-v2-{{ checksum "Gemfile.lock" }}
+            - ephemeris-bundle-v2-
+
+      - run: # Install Ruby dependencies
+          name: Bundle Install
+          command: bundle check --path vendor/bundle || bundle install --deployment
+
+        # Store bundle cache for Ruby dependencies
+      - save_cache:
+          key: ephemeris-bundle-v2-{{ checksum "Gemfile.lock" }}
+          paths:
+            - vendor/bundle
+
+      - restore_cache:
+          keys:
+            - ephemeris-yarn-{{ checksum "yarn.lock" }}
+            - ephemeris-yarn-
+
+      - run:
+          name: Yarn Install
+          command: yarn install --cache-folder ~/.cache/yarn
+
+      # Store yarn / webpacker cache
+      - save_cache:
+          key: ephemeris-yarn-{{ checksum "yarn.lock" }}
+          paths:
+            - ~/.cache/yarn
+
+      - run:
+          name: Wait for DB
+          command: dockerize -wait tcp://localhost:5432 -timeout 1m
+
+      - run:
+          name: Database setup
+          command: |
+            bin/rails db:create
+            bin/rails db:schema:load --trace
+
+      - run:
+          name: Run frontend test
+          command: |
+            yarn test
+            ~/ephemeris/cc-test-reporter format-coverage -t lcov -o ~/ephemeris/codeclimate.frontend.json
+
+      - persist_to_workspace:
+          root: ~/ephemeris
+          paths:
+            - codeclimate.frontend.json
+
+
+  upload-coverage:
+    <<: *defaults
+
+    steps:
+      - attach_workspace:
+          at: ~/ephemeris
+
+      - run:
+          name: Sum coverage results
+          command: |
+            echo "export CC_TEST_REPORTER_ID=${CC_TEST_REPORTER_ID}" >> $BASH_ENV
+            ~/ephemeris/cc-test-reporter sum-coverage ~/ephemeris/codeclimate.backend.json ~/ephemeris/codeclimate.frontend.json -p 2 -o ~/ephemeris/codeclimate.total.json
+
+      - persist_to_workspace:
+          root: ~/ephemeris
+          paths:
+            - codeclimate.total.json
+
+      - run:
+          name: Upload coverage results to Code Climate
+          command: |
+            ~/ephemeris/cc-test-reporter upload-coverage -i ~/ephemeris/codeclimate.total.json
+
+
+workflows:
+  version: 2
+
+  commit:
+    jobs:
+      - build
+      - backend-tests:
+          requires:
+            - build
+      - frontend-tests:
+          requires:
+            - build
+      - upload-coverage:
+          requires:
+            - backend-tests
+            - frontend-tests
