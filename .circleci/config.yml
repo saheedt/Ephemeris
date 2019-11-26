@@ -43,6 +43,9 @@ jobs: # a collection of steps
 
       - checkout # special step to check out source code to working directory
 
+      - attach_workspace:
+          at: ~/ephemeris
+
       - restore_cache:
           keys:
             - ephemeris-bundle-v2-{{ checksum "Gemfile.lock" }}
@@ -99,6 +102,9 @@ jobs: # a collection of steps
     steps:
 
       - checkout # special step to check out source code to working directory
+
+      - attach_workspace:
+          at: ~/ephemeris
 
       - restore_cache:
           keys:
