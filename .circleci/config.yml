@@ -71,12 +71,6 @@ jobs: # a collection of steps
             bin/rails db:create
             bin/rails db:schema:load --trace
 
-#      - run:
-#          name: Install Code Climate Test Reporter
-#          command: |
-#            curl -L https://codeclimate.com/downloads/test-reporter/test-reporter-latest-linux-amd64 > ./cc-test-reporter
-#            chmod +x ./cc-test-reporter
-
       - run:
           name: Run rspec in parallel
           command: |
@@ -146,12 +140,6 @@ jobs: # a collection of steps
             bin/rails db:create
             bin/rails db:schema:load --trace
 
-#      - run:
-#          name: Install Code Climate Test Reporter
-#          command: |
-#            curl -L https://codeclimate.com/downloads/test-reporter/test-reporter-latest-linux-amd64 > ./cc-test-reporter
-#            chmod +x ./cc-test-reporter
-
       - run:
           name: Run frontend test
           command: |
@@ -171,17 +159,11 @@ jobs: # a collection of steps
       - attach_workspace:
           at: ~/ephemeris
 
-#      - run:
-#          name: Install Code Climate Test Reporter
-#          command: |
-#            curl -L https://codeclimate.com/downloads/test-reporter/test-reporter-latest-linux-amd64 > ./cc-test-reporter
-#            chmod +x ./cc-test-reporter
-
       - run:
           name: Sum coverage results
           command: |
             echo "export CC_TEST_REPORTER_ID=${CC_TEST_REPORTER_ID}" >> $BASH_ENV
-            ~/ephemeris/cc-test-reporter sum-coverage ~/ephemeris/codeclimate.backend.json ~/ephemeris/codeclimate.frontend.json -p 2 -o ~/ephemeris/codeclimate.total.json --debug
+            ~/ephemeris/cc-test-reporter sum-coverage ~/ephemeris/codeclimate.backend.json ~/ephemeris/codeclimate.frontend.json -p 2 -o ~/ephemeris/codeclimate.total.json
 
       - persist_to_workspace:
           root: ~/ephemeris
@@ -191,7 +173,7 @@ jobs: # a collection of steps
       - run:
           name: Upload coverage results to Code Climate
           command: |
-            ~/ephemeris/cc-test-reporter upload-coverage -i ~/ephemeris/codeclimate.total.json --debug
+            ~/ephemeris/cc-test-reporter upload-coverage -i ~/ephemeris/codeclimate.total.json
 
 
 workflows:
