@@ -22,7 +22,7 @@ module Mutations
 
           expect(data).to include(
                             'user' => {
-                              'id' => be_present,
+                              'uuid' => be_present,
                               'email' => 'test@test.com',
                               'screenName' => 'tester_p'
                             },
@@ -71,7 +71,7 @@ module Mutations
               password: "#{user[:password]}"
             }) {
               user {
-                id
+                uuid
                 email
                 screenName
               }
