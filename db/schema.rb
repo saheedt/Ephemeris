@@ -13,17 +13,20 @@
 ActiveRecord::Schema.define(version: 2019_11_04_114118) do
 
   # These are extensions that must be enabled in order to support this database
+  enable_extension "pgcrypto"
   enable_extension "plpgsql"
 
   create_table "users", force: :cascade do |t|
-    t.string "screen_name"
+    t.string "screen_name", null: false
     t.string "name"
-    t.string "email"
-    t.string "password_digest"
+    t.string "email", null: false
+    t.string "password_digest", null: false
+    t.uuid "uuid", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["email"], name: "index_users_on_email", unique: true
     t.index ["screen_name"], name: "index_users_on_screen_name", unique: true
+    t.index ["uuid"], name: "index_users_on_uuid", unique: true
   end
 
 end
