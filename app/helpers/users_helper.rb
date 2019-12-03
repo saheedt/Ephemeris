@@ -17,5 +17,12 @@ module UsersHelper
         }
       end
     end
+
+    def self.login(email, password)
+      user = User.find_by(email: email)
+      return { user: nil, token: nil, error: MessagesHelper::Users.not_found(email) } if user.blank?
+      return { user: nil, token: nil, error: MessagesHelper::Users.invalid_credentials } if !user&.authenticate(password)
+      return { user: user, token: AuthHelper::Jwt.encode(user), error: nil } if user&.authenticate(password)
+    end
   end
 end
