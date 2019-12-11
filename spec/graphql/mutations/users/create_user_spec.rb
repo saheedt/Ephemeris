@@ -1,5 +1,4 @@
-require 'rails_helper'
-
+# require 'rails_helper'
 module Mutations
   module Users
     RSpec.describe CreateUser, type: :request do
@@ -12,7 +11,7 @@ module Mutations
           user = { email: "a@b.com", screen_name: "tester_a", password: "testingtester",
                    password_confirmation: "testingtester", name: "Test A"}
 
-          post '/graphql', params: { query: graphQuery(user) }
+          post '/graphql', params: { query: create_user_mutation(user) }
 
           json = JSON.parse(response.body)
           data = json['data']['createUser']
@@ -32,7 +31,7 @@ module Mutations
           user = { email: "a@b.com", screen_name: "tester_a", password: "testingtester",
                    password_confirmation: "testing", name: "Test A"}
 
-          post '/graphql', params: { query: graphQuery(user) }
+          post '/graphql', params: { query: create_user_mutation(user) }
 
           json = JSON.parse(response.body)
           data = json['data']['createUser']
@@ -45,27 +44,27 @@ module Mutations
         end
       end
       
-      def graphQuery(user)
-        <<~GQL
-          mutation {
-            createUser(input: {
-              email: "#{user[:email]}"
-              screenName: "#{user[:screen_name]}"
-              password: "#{user[:password]}"
-              passwordConfirmation: "#{user[:password_confirmation]}"
-              name: "#{user[:name]}"
-            }) {
-              user {
-                uuid
-                email
-                screenName
-              }
-              token
-              errors
-            }
-          }
-        GQL
-      end
+      # def graphQuery(user)
+      #   <<~GQL
+      #     mutation {
+      #       createUser(input: {
+      #         email: "#{user[:email]}"
+      #         screenName: "#{user[:screen_name]}"
+      #         password: "#{user[:password]}"
+      #         passwordConfirmation: "#{user[:password_confirmation]}"
+      #         name: "#{user[:name]}"
+      #       }) {
+      #         user {
+      #           uuid
+      #           email
+      #           screenName
+      #         }
+      #         token
+      #         errors
+      #       }
+      #     }
+      #   GQL
+      # end
     end
   end
 end
