@@ -1,4 +1,4 @@
-# require 'rails_helper'
+require 'rails_helper'
 module Mutations
   module Users
     RSpec.describe CreateUser, type: :request do

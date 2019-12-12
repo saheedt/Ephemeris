@@ -1,5 +1,4 @@
-# require 'rails_helper'
-
+require 'rails_helper'
 module Mutations
   module Users
     RSpec.describe UserLogin, type: :request do
