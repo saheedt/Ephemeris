@@ -1,3 +1,4 @@
+require 'rails_helper'
 module Mutations
   module Topics
     RSpec.describe CreateTopic, type: :request  do
