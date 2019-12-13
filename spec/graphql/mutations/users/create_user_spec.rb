@@ -42,29 +42,8 @@ module Mutations
                             'errors' => [ "Password confirmation doesn't match Password" ]
                           )
         end
+
       end
-      
-      # def graphQuery(user)
-      #   <<~GQL
-      #     mutation {
-      #       createUser(input: {
-      #         email: "#{user[:email]}"
-      #         screenName: "#{user[:screen_name]}"
-      #         password: "#{user[:password]}"
-      #         passwordConfirmation: "#{user[:password_confirmation]}"
-      #         name: "#{user[:name]}"
-      #       }) {
-      #         user {
-      #           uuid
-      #           email
-      #           screenName
-      #         }
-      #         token
-      #         errors
-      #       }
-      #     }
-      #   GQL
-      # end
     end
   end
 end

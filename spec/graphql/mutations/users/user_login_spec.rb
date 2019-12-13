@@ -61,26 +61,6 @@ module Mutations
         end
 
       end
-
-      # def graphQueryMutation(user)
-      #   <<~GQL
-      #     mutation {
-      #       userLogin(input: {
-      #         email: "#{user[:email]}"
-      #         password: "#{user[:password]}"
-      #       }) {
-      #         user {
-      #           uuid
-      #           email
-      #           screenName
-      #         }
-      #         token
-      #         error
-      #       }
-      #     }
-      #   GQL
-      # end
-
     end
   end
 end
