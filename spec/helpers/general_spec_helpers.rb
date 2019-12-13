@@ -41,11 +41,12 @@ module Helpers
       GQL
     end
 
-    def create_topic_mutation topic
+    def create_topic_mutation(topic)
       <<~GQL
         mutation {
           createTopic(input: {
             title: "#{topic[:title]}"
+            isPublic: #{topic[:is_public]}
           })
           {
             topic {
@@ -55,6 +56,20 @@ module Helpers
           }
         }
       GQL
+    end
+
+    def dummyLoginCredentials(email='test@test.com', password= '1234567890')
+      {
+        email: email,
+        password: password
+      }
+    end
+
+    def dummyTopicCredential(title='xyz', is_public=true)
+      {
+        title: title,
+        is_public: is_public
+      }
     end
   end
 end
