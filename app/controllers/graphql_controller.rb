@@ -3,9 +3,13 @@ class GraphqlController < ApplicationController
     variables = ensure_hash(params[:variables])
     query = params[:query]
     operation_name = params[:operationName]
+    token = request.headers['HTTP_AUTHORIZATION'] ? request.headers['HTTP_AUTHORIZATION'].gsub(/[\n\t\b\"\']/, "") : nil
+    token = token.present? ? token : nil
     context = {
       # Query context goes here, for example:
-      # current_user: current_user,
+      current_user: {
+        token: token
+      }
     }
     result = EphemerisSchema.execute(query, variables: variables, context: context, operation_name: operation_name)
     render json: result

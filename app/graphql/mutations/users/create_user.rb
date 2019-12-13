@@ -1,4 +1,4 @@
-module  Mutations
+module Mutations
   module Users
     class CreateUser < Mutations::BaseMutation
       argument :email, String, required: true

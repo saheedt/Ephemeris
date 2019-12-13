@@ -1,5 +1,4 @@
 require 'rails_helper'
-
 module Mutations
   module Users
     RSpec.describe UserLogin, type: :request do
@@ -15,7 +14,7 @@ module Mutations
         it ' should successfully log user in' do
           user = { email: 'test@test.com', password: '1234567890' }
 
-          post '/graphql', params: { query: graphQueryMutation(user) }
+          post '/graphql', params: { query: login_mutation(user) }
 
           json = JSON.parse(response.body)
           data = json['data']['userLogin']
@@ -34,7 +33,7 @@ module Mutations
         it 'should return invalid credential error' do
           user = { email: 'test@test.com', password: '123456789' }
 
-          post '/graphql', params: { query: graphQueryMutation(user) }
+          post '/graphql', params: { query: login_mutation(user) }
 
           json = JSON.parse(response.body)
           data = json['data']['userLogin']
@@ -49,7 +48,7 @@ module Mutations
         it 'should return user not found error' do
           user = { email: 'test@fail.com', password: '123456789' }
 
-          post '/graphql', params: { query: graphQueryMutation(user) }
+          post '/graphql', params: { query: login_mutation(user) }
 
           json = JSON.parse(response.body)
           data = json['data']['userLogin']
@@ -62,26 +61,6 @@ module Mutations
         end
 
       end
-
-      def graphQueryMutation(user)
-        <<~GQL
-          mutation {
-            userLogin(input: {
-              email: "#{user[:email]}"
-              password: "#{user[:password]}"
-            }) {
-              user {
-                uuid
-                email
-                screenName
-              }
-              token
-              error
-            }
-          }
-        GQL
-      end
-
     end
   end
 end
