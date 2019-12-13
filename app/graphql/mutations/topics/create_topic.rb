@@ -9,8 +9,6 @@ module Mutations
       def resolve(title: 'Untitled', is_public: false)
         auth = AuthHelper::Auth.new(context[:current_user][:token])
         token_data = auth.verify_token
-        is_public = true if is_public.is_a?(String) && is_public === "true"
-        is_public = false if is_public.is_a?(String) && is_public === "false"
         if token_data[:verified?]
           search_means = UsersHelper::Users.default_user_search_means
           current_user_id = UsersHelper::Users.fetch_by("#{search_means}": token_data[:verified_user][:uuid])[:id]
