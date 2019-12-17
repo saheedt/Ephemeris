@@ -10,11 +10,20 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_12_06_112842) do
+ActiveRecord::Schema.define(version: 2019_12_16_145052) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "pgcrypto"
   enable_extension "plpgsql"
+
+  create_table "posts", force: :cascade do |t|
+    t.bigint "topic_id"
+    t.uuid "uuid", null: false
+    t.string "title", default: "Untitled", null: false
+    t.text "content"
+    t.index ["topic_id"], name: "index_posts_on_topic_id"
+    t.index ["uuid"], name: "index_posts_on_uuid", unique: true
+  end
 
   create_table "topics", force: :cascade do |t|
     t.bigint "user_id"
@@ -40,5 +49,6 @@ ActiveRecord::Schema.define(version: 2019_12_06_112842) do
     t.index ["uuid"], name: "index_users_on_uuid", unique: true
   end
 
+  add_foreign_key "posts", "topics"
   add_foreign_key "topics", "users"
 end
