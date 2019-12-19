@@ -20,7 +20,7 @@ ActiveRecord::Schema.define(version: 2019_12_16_145052) do
     t.bigint "topic_id"
     t.uuid "uuid", null: false
     t.string "title", default: "Untitled", null: false
-    t.text "content"
+    t.text "content", default: "", null: false
     t.index ["topic_id"], name: "index_posts_on_topic_id"
     t.index ["uuid"], name: "index_posts_on_uuid", unique: true
   end

@@ -16,7 +16,7 @@ RSpec.describe Topic, type: :model do
       Topic.destroy_all
     end
 
-    it 'should create topic with default values if nothing is supplied' do
+    it 'should create topic with default values if no values are supplied' do
       topic = Topic.create!(user: user)
       expect(topic[:title]).to eq('Untitled')
       expect(topic[:is_public]).to eq(false)
