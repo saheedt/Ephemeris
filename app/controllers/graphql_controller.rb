@@ -3,10 +3,8 @@ class GraphqlController < ApplicationController
     variables = ensure_hash(params[:variables])
     query = params[:query]
     operation_name = params[:operationName]
-    token = request.headers['HTTP_AUTHORIZATION'] ? request.headers['HTTP_AUTHORIZATION'].gsub(/[\n\t\b\"\']/, "") : nil
-    token = token.present? ? token : nil
+    token = parse_token(request.headers['HTTP_AUTHORIZATION'])
     context = {
-      # Query context goes here, for example:
       current_user: {
         token: token
       }
@@ -43,5 +41,11 @@ class GraphqlController < ApplicationController
     logger.error e.backtrace.join("\n")
 
     render json: { error: { message: e.message, backtrace: e.backtrace }, data: {} }, status: 500
+  end
+
+  def parse_token(source)
+    token = nil
+    token = source.gsub(/[\n\t\b\"\']/, "") if source.present?
+    token.blank? ? nil : token
   end
 end
