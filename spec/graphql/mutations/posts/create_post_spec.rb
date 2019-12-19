@@ -69,6 +69,22 @@ module Mutations
                             "content" => ""
                           )
         end
+
+        it 'should return User unauthorized error if a user tries to add post to topic other than theirs' do
+          user_obj = { name: 'alt_user', screen_name: 'alt_user_p', email: 'alt_user@test.com',
+                       password: '1234567890', password_confirmation: '1234567890' }
+          create(:user, user_obj)
+          post '/graphql', params: { query: login_mutation(dummy_login_credentials(user_obj[:email], user_obj[:password])) }
+          json = JSON.parse(response.body)
+          local_token = json['data']['userLogin']['token']
+
+          post '/graphql', params: { query: create_post_mutation(dummy_post_credentials(topic_uuid, "", nil)) },
+               headers: { Authorization: local_token }
+          json = JSON.parse(response.body)
+          error = json['errors'][0]
+
+          expect(error).to include( "message" => MessagesHelper::Auth.user_unauthorized )
+        end
       end
     end
   end

@@ -14,7 +14,7 @@ module Mutations
           search_means = TopicsHelper::Topics.default_topic_search_means
           topic = TopicsHelper::Topics.fetch_with_relationship_by({"#{search_means}": topic_uuid} , :user)
           topic_owner = topic.user
-          ExceptionHandlerHelper::GQLCustomError.new(MessagesHelper::Auth.user_unauthorized) unless auth.isAuthorized?(topic_owner[:uuid])
+          return ExceptionHandlerHelper::GQLCustomError.new(MessagesHelper::Auth.user_unauthorized) unless auth.isAuthorized?(topic_owner[:uuid])
           title = "Untitled" if title.blank?
           PostHelper::Posts.create(title, content, topic[:id])
         else
