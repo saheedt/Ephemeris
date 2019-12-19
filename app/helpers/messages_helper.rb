@@ -16,7 +16,10 @@ module MessagesHelper
       "Access Denied!. Expired token"
     end
     def self.token_verification_error
-      "Access Denied. Couldn't verify token validity"
+      "Access Denied!. Couldn't verify token validity"
+    end
+    def self.user_unauthorized
+      "User is unauthorized to perform this action"
     end
   end
 end

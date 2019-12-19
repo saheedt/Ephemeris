@@ -39,7 +39,5 @@ module AuthHelper
     def isAuthorized?(resource_owner_uuid)
       resource_owner_uuid === @decoded[:uuid]
     end
-
   end
-
 end

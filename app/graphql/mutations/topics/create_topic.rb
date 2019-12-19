@@ -12,6 +12,7 @@ module Mutations
         if token_data[:verified?]
           search_means = UsersHelper::Users.default_user_search_means
           current_user_id = UsersHelper::Users.fetch_by("#{search_means}": token_data[:verified_user][:uuid])[:id]
+          title = "Untitled" if title.blank?
           TopicsHelper::Topics.create(title, is_public, current_user_id)
         else
           ExceptionHandlerHelper::GQLCustomError.new(MessagesHelper::Auth.token_verification_error)

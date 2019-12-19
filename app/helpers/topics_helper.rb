@@ -13,5 +13,13 @@ module TopicsHelper
         ExceptionHandlerHelper::GQLCustomError.new(topic.errors.full_messages)
       end
     end
+
+    def self.fetch_with_relationship_by(type, relationship)
+      Topic.includes(relationship).find_by(type)
+    end
+
+    def self.default_topic_search_means
+      "uuid"
+    end
   end
 end

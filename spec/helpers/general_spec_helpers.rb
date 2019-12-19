@@ -58,17 +58,44 @@ module Helpers
       GQL
     end
 
-    def dummyLoginCredentials(email='test@test.com', password= '1234567890')
+    def create_post_mutation(post)
+      <<~GQL
+        mutation {
+          createPost(input: {
+            title: "#{post[:title]}"
+            content: "#{post[:content]}"
+            topicUuid: "#{post[:topic_uuid]}"
+          })
+          {
+            post {
+              uuid
+              title
+              content
+            }
+          }
+        }
+      GQL
+    end
+
+    def dummy_login_credentials(email='test@test.com', password= '1234567890')
       {
         email: email,
         password: password
       }
     end
 
-    def dummyTopicCredential(title='xyz', is_public=true)
+    def dummy_topic_credentials(title='xyz', is_public=true)
       {
         title: title,
         is_public: is_public
+      }
+    end
+
+    def dummy_post_credentials(topic_uuid=nil, title='test post', content='my test content')
+      {
+       title: title,
+       content: content,
+       topic_uuid: topic_uuid
       }
     end
   end
