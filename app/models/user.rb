@@ -4,7 +4,7 @@ class User < ApplicationRecord
   validates :email, uniqueness: true
   validates :screen_name, uniqueness: true
   before_save :set_uuid
-  has_many :topics
+  has_many :topics, dependent: :destroy
   has_many :posts, through: :topics
 
 
