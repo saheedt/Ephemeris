@@ -27,7 +27,7 @@ module Mutations
                           )
         end
 
-        it 'should not creates a user with incomplete credentials' do
+        it 'should not creates a user with incorrect credentials format' do
           user = { email: "a@b.com", screen_name: "tester_a", password: "testingtester",
                    password_confirmation: "testing", name: "Test A"}
 
@@ -45,6 +45,23 @@ module Mutations
                            )
         end
 
+        it 'should not re-create an already existing user' do
+          user = { email: "a@b.com", screen_name: "tester_a", password: "testingtester",
+                   password_confirmation: "testingtester", name: "Test A"}
+
+          post '/graphql', params: { query: create_user_mutation(user) }
+          post '/graphql', params: { query: create_user_mutation(user) }
+
+          json = JSON.parse(response.body)
+          errors = json["errors"][0]
+
+          expect(errors).to include(
+                              {"message" => [
+                                "Email has already been taken",
+                                "Screen name has already been taken"
+                              ]}
+                            )
+        end
       end
     end
   end
