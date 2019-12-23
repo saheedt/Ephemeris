@@ -15,9 +15,9 @@ module Helpers
               uuid
               email
               screenName
+              name
             }
             token
-            errors
           }
         }
       GQL
@@ -33,9 +33,9 @@ module Helpers
               uuid
               email
               screenName
+              name
             }
             token
-            error
           }
         }
       GQL

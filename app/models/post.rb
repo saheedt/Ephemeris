@@ -5,6 +5,6 @@ class Post < ApplicationRecord
 
   private
   def set_uuid
-    self.uuid = SecureRandom.uuid
+    self.uuid = SecureRandom.uuid if self.uuid.blank?
   end
 end

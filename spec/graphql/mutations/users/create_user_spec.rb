@@ -19,11 +19,11 @@ module Mutations
           expect(data).to include(
                             'user' => {
                               'uuid' => be_present,
-                              'email' => 'a@b.com',
-                              'screenName' => 'tester_a',
+                              'email' => user[:email],
+                              'screenName' => user[:screen_name],
+                              'name' => user[:name]
                             },
                             'token' => be_present,
-                            'errors' => nil
                           )
         end
 
@@ -34,13 +34,15 @@ module Mutations
           post '/graphql', params: { query: create_user_mutation(user) }
 
           json = JSON.parse(response.body)
-          data = json['data']['createUser']
+          data = json["data"]
+          errors = json["errors"][0]
 
           expect(data).to include(
-                            'user' => nil,
-                            'token' => nil,
-                            'errors' => [ "Password confirmation doesn't match Password" ]
+                            { 'createUser' => nil }
                           )
+          expect(errors).to include(
+                             {"message" => [ "Password confirmation doesn't match Password" ]}
+                           )
         end
 
       end

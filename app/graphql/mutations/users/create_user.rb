@@ -9,10 +9,14 @@ module Mutations
 
       field :user, Types::UserType, null: true
       field :token, String, null: true
-      field :errors, [String], null: true
+      # field :errors, [String], null: true
 
       def resolve(email:, password:, password_confirmation:, screen_name:, name:)
-        UsersHelper::Users.create(email, password, password_confirmation, screen_name, name)
+        user_obj = { 'email': email, 'password': password,
+                     'password_confirmation': password_confirmation,
+                     'screen_name': screen_name, 'name': name
+        }
+        UsersHelper::Users.create(user_obj)
       end
     end
   end

@@ -6,7 +6,7 @@ module Mutations
 
       field :user, Types::UserType, null: true
       field :token, String, null: true
-      field :error, String, null: true
+      # field :error, String, null: true
 
       def resolve(email:, password:)
         UsersHelper::Users.login(email, password)
