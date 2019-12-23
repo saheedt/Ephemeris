@@ -51,14 +51,30 @@ module Mutations
                             )
         end
 
+        it 'should return User unauthorized error if a user tries to update topic(s) belonging to other users' do
+          user_obj = { name: 'alt_user', screen_name: 'alt_user_p', email: 'alt_user@test.com',
+                       password: '1234567890', password_confirmation: '1234567890' }
+          create(:user, user_obj)
+          post '/graphql', params: { query: login_mutation(dummy_login_credentials(user_obj[:email], user_obj[:password])) }
+          json = JSON.parse(response.body)
+          local_token = json['data']['userLogin']['token']
+
+          post '/graphql', params: { query: topic_mutation("updateTopic", dummy_topic_credentials("Fourth update test",false, topic_uuid)) },
+               headers: { Authorization: local_token }
+          json = JSON.parse(response.body)
+          error = json['errors'][0]
+
+          expect(error).to include( "message" => MessagesHelper::Auth.user_unauthorized )
+        end
+
         it 'should successfully update a topic without supplied credentials' do
-          post '/graphql', params: { query: topic_mutation("updateTopic", dummy_topic_credentials('Fourth update test', false, topic_uuid)) },
+          post '/graphql', params: { query: topic_mutation("updateTopic", dummy_topic_credentials('Fifth update test', false, topic_uuid)) },
                headers: { Authorization: token }
           json = JSON.parse(response.body)
           topic = json['data']['updateTopic']['topic']
           expect(topic).to include(
                              "uuid" => be_present,
-                             "title" => "Fourth update test"
+                             "title" => "Fifth update test"
                            )
         end
 
