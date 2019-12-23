@@ -23,26 +23,28 @@ module Mutations
                             'user' => {
                               'uuid' => be_present,
                               'email' => 'test@test.com',
-                              'screenName' => 'tester_p'
+                              'screenName' => 'tester_p',
+                              'name' => 'tester'
                             },
-                            'token' => be_present,
-                            'error' => nil
+                            'token' => be_present
                           )
         end
 
-        it 'should return invalid credential error' do
+        it 'should return invalid credential error and nil userLogin attribute' do
           user = { email: 'test@test.com', password: '123456789' }
 
           post '/graphql', params: { query: login_mutation(user) }
 
           json = JSON.parse(response.body)
-          data = json['data']['userLogin']
+          data = json['data']
+          errors = json['errors'][0]
 
           expect(data).to include(
-                            'user' => nil,
-                            'token' => nil,
-                            'error' => MessagesHelper::Users.invalid_credentials
+                            { 'userLogin' => nil }
                           )
+          expect(errors).to include(
+                              { "message" => MessagesHelper::Users.invalid_credentials }
+                            )
         end
 
         it 'should return user not found error' do
@@ -51,12 +53,10 @@ module Mutations
           post '/graphql', params: { query: login_mutation(user) }
 
           json = JSON.parse(response.body)
-          data = json['data']['userLogin']
+          errors = json['errors'][0]
 
-          expect(data).to include(
-                            'user' => nil,
-                            'token' => nil,
-                            'error' => MessagesHelper::Users.not_found(user[:email])
+          expect(errors).to include(
+                            'message' => MessagesHelper::Users.not_found(user[:email])
                           )
         end
 

@@ -19,30 +19,49 @@ module Mutations
           expect(data).to include(
                             'user' => {
                               'uuid' => be_present,
-                              'email' => 'a@b.com',
-                              'screenName' => 'tester_a',
+                              'email' => user[:email],
+                              'screenName' => user[:screen_name],
+                              'name' => user[:name]
                             },
                             'token' => be_present,
-                            'errors' => nil
                           )
         end
 
-        it 'should not creates a user with incomplete credentials' do
+        it 'should not creates a user with incorrect credentials format' do
           user = { email: "a@b.com", screen_name: "tester_a", password: "testingtester",
                    password_confirmation: "testing", name: "Test A"}
 
           post '/graphql', params: { query: create_user_mutation(user) }
 
           json = JSON.parse(response.body)
-          data = json['data']['createUser']
+          data = json["data"]
+          errors = json["errors"][0]
 
           expect(data).to include(
-                            'user' => nil,
-                            'token' => nil,
-                            'errors' => [ "Password confirmation doesn't match Password" ]
+                            { 'createUser' => nil }
                           )
+          expect(errors).to include(
+                             {"message" => [ "Password confirmation doesn't match Password" ]}
+                           )
         end
 
+        it 'should not re-create an already existing user' do
+          user = { email: "a@b.com", screen_name: "tester_a", password: "testingtester",
+                   password_confirmation: "testingtester", name: "Test A"}
+
+          post '/graphql', params: { query: create_user_mutation(user) }
+          post '/graphql', params: { query: create_user_mutation(user) }
+
+          json = JSON.parse(response.body)
+          errors = json["errors"][0]
+
+          expect(errors).to include(
+                              {"message" => [
+                                "Email has already been taken",
+                                "Screen name has already been taken"
+                              ]}
+                            )
+        end
       end
     end
   end

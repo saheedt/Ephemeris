@@ -15,16 +15,37 @@ module Mutations
           User.destroy_all
         end
 
-        it 'should not successfully create a topic' do
-          post '/graphql', params: { query: create_topic_mutation(dummy_topic_credentials) }
+        it 'should not successfully create a topic without token' do
+          post '/graphql', params: { query: topic_mutation("createTopic", dummy_topic_credentials) }
 
           json = JSON.parse(response.body)
           error = json['errors'][0]
           expect(error).to include( "message" => MessagesHelper::Auth.token_verification_error )
         end
 
+        it 'should not create a topic with an invalid token' do
+          post '/graphql', params: { query: topic_mutation("createTopic", dummy_topic_credentials('second test', true)) },
+               headers: { Authorization: fake_token }
+          json = JSON.parse(response.body)
+          errors = json["errors"]
+          expect(errors).to include(
+                              "message" => MessagesHelper::Auth.invalid_token
+                            )
+        end
+
+        it 'should not create a topic with an expired token' do
+          expired_token = 'eyJhbGciOiJIUzI1NiJ9.eyJ1dWlkIjoiMzc5OTAyYzEtMjczYy00Y2U2LWJkODMtNzQyMTNkMzI4MzkwIiwiZXhwIjoxNTc3MjE4MjQ1fQ.dhrjEf3JNf9Pa9YJXdzpAVcH9jitIsNdNOnCo7IqxJS'
+          post '/graphql', params: { query: topic_mutation("createTopic", dummy_topic_credentials('second test', true)) },
+               headers: { Authorization: fake_token(expired_token) }
+          json = JSON.parse(response.body)
+          errors = json["errors"]
+          expect(errors).to include(
+                              "message" => MessagesHelper::Auth.expired_token
+                            )
+        end
+
         it 'should successfully create a topic without one supplied credential' do
-          post '/graphql', params: { query: create_topic_mutation(dummy_topic_credentials('successful')) },
+          post '/graphql', params: { query: topic_mutation("createTopic", dummy_topic_credentials('successful')) },
                headers: { Authorization: token }
           json = JSON.parse(response.body)
           topic = json['data']['createTopic']['topic']
@@ -35,7 +56,7 @@ module Mutations
         end
 
         it 'should successfully create a topic with all supplied credentials' do
-          post '/graphql', params: { query: create_topic_mutation(dummy_topic_credentials('second test', true)) },
+          post '/graphql', params: { query: topic_mutation("createTopic", dummy_topic_credentials('second test', true)) },
                headers: { Authorization: token }
           json = JSON.parse(response.body)
           topic = json['data']['createTopic']['topic']
@@ -44,7 +65,6 @@ module Mutations
                              "title" => "second test"
                            )
         end
-
       end
     end
   end

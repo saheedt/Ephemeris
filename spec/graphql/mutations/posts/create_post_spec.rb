@@ -17,7 +17,7 @@ module Mutations
         end
 
         before(:each) do
-          post '/graphql', params: { query: create_topic_mutation(dummy_topic_credentials('successful')) },
+          post '/graphql', params: { query: topic_mutation("createTopic", dummy_topic_credentials('successful')) },
                headers: { Authorization: token }
           json = JSON.parse(response.body)
           topic_uuid = json['data']['createTopic']['topic']['uuid']
@@ -27,11 +27,28 @@ module Mutations
           Topic.destroy_all
         end
 
-        it 'should not successfully create a post' do
+        it 'should not successfully create a post without token' do
           post '/graphql', params: { query: create_post_mutation(dummy_post_credentials(topic_uuid)) }
           json = JSON.parse(response.body)
           error = json['errors'][0]
           expect(error).to include( "message" => MessagesHelper::Auth.token_verification_error )
+        end
+
+        it 'should not successfully create post with expired token' do
+          expired_token = 'eyJhbGciOiJIUzI1NiJ9.eyJ1dWlkIjoiMzc5OTAyYzEtMjczYy00Y2U2LWJkODMtNzQyMTNkMzI4MzkwIiwiZXhwIjoxNTc3MjE4MjQ1fQ.dhrjEf3JNf9Pa9YJXdzpAVcH9jitIsNdNOnCo7IqxIO'
+          post '/graphql', params: { query: create_post_mutation(dummy_post_credentials(topic_uuid)) },
+               headers: { Authorization: fake_token(expired_token) }
+          json = JSON.parse(response.body)
+          error = json['errors'][0]
+          expect(error).to include( "message" => MessagesHelper::Auth.expired_token )
+        end
+
+        it 'should not successfully create post with invalid token' do
+          post '/graphql', params: { query: create_post_mutation(dummy_post_credentials(topic_uuid)) },
+               headers: { Authorization: fake_token }
+          json = JSON.parse(response.body)
+          error = json['errors'][0]
+          expect(error).to include( "message" => MessagesHelper::Auth.invalid_token )
         end
 
         it 'should successfully create a post for a topic' do

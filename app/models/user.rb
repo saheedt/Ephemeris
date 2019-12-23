@@ -6,10 +6,4 @@ class User < ApplicationRecord
   before_save :set_uuid
   has_many :topics, dependent: :destroy
   has_many :posts, through: :topics
-
-
-  private
-  def set_uuid
-    self.uuid = SecureRandom.uuid
-  end
 end
