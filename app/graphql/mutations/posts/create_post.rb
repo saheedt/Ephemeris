@@ -13,7 +13,7 @@ module Mutations
       field :post, Types::PostType, null: true
 
       def resolve(title: "Untitled", content: "", topic_uuid:)
-        auth = AuthHelper::Auth.new(context[:current_user][:token])
+        auth = AUTH_HELPER.new(context[:current_user][:token])
         token_data = auth.verify_token
         return EXCEPTION_HANDLER.new(AUTH_MSG_HELPER.token_verification_error) unless token_data[:verified?]
         search_means = TOPIC_HELPER.default_topic_search_means

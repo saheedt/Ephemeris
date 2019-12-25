@@ -17,15 +17,13 @@ module TopicsHelper
       end
     end
 
-    def self.fetch_with_relationship_by(type, relationship)
+    def self.fetch_with_relationship_by(type, *relationship)
       Topic.includes(relationship).find_by(type)
     end
 
     def self.default_topic_search_means(means = "uuid")
       means
     end
-
-    private
 
     def self.build_topic_response(topic_record)
       {

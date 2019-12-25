@@ -5,5 +5,6 @@ module Types
     field :create_topic, mutation: Mutations::Topics::CreateTopic
     field :update_topic, mutation: Mutations::Topics::UpdateTopic
     field :create_post, mutation: Mutations::Posts::CreatePost
+    field :update_post, mutation: Mutations::Posts::UpdatePost
   end
 end

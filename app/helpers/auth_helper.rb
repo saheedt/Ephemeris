@@ -32,8 +32,7 @@ module AuthHelper
     def verify_token
       return { verified?: false, verified_user: nil } unless has_token?
       @decoded = Jwt.decode(@token)
-      return { verified?: true, verified_user: @decoded } if @decoded[:uuid].present? and @decoded[:exp].present?
-      { verified?: false, verified_user: nil }
+      { verified?: true, verified_user: @decoded } if @decoded[:uuid].present? and @decoded[:exp].present?
     end
 
     def isAuthorized?(resource_owner_uuid)

@@ -24,11 +24,17 @@ module UsersHelper
       User.select(:id).find_by(type)
     end
 
+    def self.fetch_with_relationship_by(type, *relationship)
+      User.includes(relationship).find_by(type)
+    end
+
     def self.default_user_search_means(means = "uuid")
       means
     end
 
-    private
+    def self.extract_post(user_obj, post_uuid)
+      user_obj.posts.map{ |post| post if post[:uuid] === post_uuid }
+    end
 
     def self.build_user_response(user_record, token)
       {
