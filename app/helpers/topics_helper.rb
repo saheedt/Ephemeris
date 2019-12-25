@@ -17,7 +17,7 @@ module TopicsHelper
       end
     end
 
-    def self.fetch_with_relationship_by(type, relationship)
+    def self.fetch_with_relationship_by(type, *relationship)
       Topic.includes(relationship).find_by(type)
     end
 
@@ -27,7 +27,7 @@ module TopicsHelper
 
     private
 
-    def self.build_topic_response(topic_record)
+    def build_topic_response(topic_record)
       {
         "topic": {
           "uuid": topic_record[:uuid],

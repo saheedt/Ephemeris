@@ -24,6 +24,10 @@ module UsersHelper
       User.select(:id).find_by(type)
     end
 
+    def self.fetch_with_relationship_by(type, *relationship)
+      User.includes(relationship).find_by(type)
+    end
+
     def self.default_user_search_means(means = "uuid")
       means
     end
