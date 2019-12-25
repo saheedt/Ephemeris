@@ -32,7 +32,9 @@ module UsersHelper
       means
     end
 
-    private
+    def self.extract_post(user_obj, post_uuid)
+      user_obj.posts.map{ |post| post if post[:uuid] === post_uuid }
+    end
 
     def self.build_user_response(user_record, token)
       {

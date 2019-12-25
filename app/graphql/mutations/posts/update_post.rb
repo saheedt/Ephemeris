@@ -20,7 +20,7 @@ module Mutations
         search_means = POST_HELPER.default_search_means
         current_user = USERS_HELPER.fetch_with_relationship_by({"#{search_means}": token_data[:verified_user][:uuid]},
                                                                :posts)
-        post = current_user.posts.map{ |post| post if post[:uuid] === post_uuid }
+        post = USERS_HELPER.extract_post(current_user, post_uuid)
         return EXCEPTION_HANDLER.new(AUTH_MSG_HELPER.user_unauthorized) if post.blank?
         post = post.first
         title = "Untitled" if title.blank?
