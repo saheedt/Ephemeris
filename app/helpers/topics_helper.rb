@@ -25,9 +25,7 @@ module TopicsHelper
       means
     end
 
-    private
-
-    def build_topic_response(topic_record)
+    def self.build_topic_response(topic_record)
       {
         "topic": {
           "uuid": topic_record[:uuid],

@@ -95,6 +95,25 @@ module Helpers
       GQL
     end
 
+    def update_post_mutation(post)
+      <<~GQL
+        mutation {
+          updatePost(input: {
+            title: "#{post[:title]}"
+            content: "#{post[:content]}"
+            postUuid: "#{post[:post_uuid]}"
+          })
+          {
+            post {
+              uuid
+              title
+              content
+            }
+          }
+        }
+      GQL
+    end
+
     def dummy_login_credentials(email='test@test.com', password= '1234567890')
       {
         email: email,
@@ -122,6 +141,14 @@ module Helpers
        title: title,
        content: content,
        topic_uuid: topic_uuid
+      }
+    end
+
+    def dummy_post_update_credentials(post_uuid=nil, title='update post', content='update my test content')
+      {
+        title: title,
+        content: content,
+        post_uuid: post_uuid
       }
     end
 
