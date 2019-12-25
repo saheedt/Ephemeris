@@ -17,6 +17,11 @@ module TopicsHelper
       end
     end
 
+    def self.destroy(topic_record)
+      destroyed = topic_record.destroy
+      build_topic_response(destroyed)
+    end
+
     def self.fetch_with_relationship_by(type, *relationship)
       Topic.includes(relationship).find_by(type)
     end
