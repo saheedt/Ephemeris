@@ -6,6 +6,18 @@ RSpec.describe User, type: :model do
     after(:each) do
       User.destroy_all
     end
+
+    it 'should not create user with missing credentials' do
+      user_object = {
+        name: 'tested',
+        password: '1234567890',
+        password_confirmation: '1234567890'
+      }
+      user = User.create user_object
+
+      expect(user.errors.full_messages).to eq(["Email can't be blank", "Screen name can't be blank"])
+    end
+
     it 'should create user with supplied credential' do
       user_object = {
         screen_name: 'tester_p',
@@ -14,7 +26,7 @@ RSpec.describe User, type: :model do
         password: '1234567890',
         password_confirmation: '1234567890'
       }
-      user = User.create! user_object
+      user = User.create user_object
 
       expect(user[:screen_name]).to eq(user_object[:screen_name])
       expect(user[:name]).to eq(user_object[:name])
@@ -31,7 +43,7 @@ RSpec.describe User, type: :model do
         password: '1234567890',
         password_confirmation: '1234567890'
       }
-      user = User.create! user_object
+      user = User.create user_object
 
       found = User.find_by(uuid: user[:uuid])
 

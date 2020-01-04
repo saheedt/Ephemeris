@@ -4,6 +4,7 @@ module Types
     field :user_login, mutation: Mutations::Users::UserLogin
     field :create_topic, mutation: Mutations::Topics::CreateTopic
     field :update_topic, mutation: Mutations::Topics::UpdateTopic
+    field :delete_topic, mutation: Mutations::Topics::DeleteTopic
     field :create_post, mutation: Mutations::Posts::CreatePost
     field :update_post, mutation: Mutations::Posts::UpdatePost
   end

@@ -42,7 +42,21 @@ module Helpers
     end
 
     def topic_mutation(type, topic)
-      if topic[:topic_uuid].present?
+      if type == "deleteTopic"
+        <<~GQL
+        mutation {
+          #{type}(input: {
+            topicUuid: "#{topic[:topic_uuid]}"
+          })
+          {
+            topic {
+              uuid
+              title
+            }
+          }
+        }
+        GQL
+      elsif type == "updateTopic"
         <<~GQL
         mutation {
           #{type}(input: {

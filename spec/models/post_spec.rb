@@ -19,7 +19,7 @@ RSpec.describe Post, type: :model do
     end
 
     it 'should create Post with default values if no values are supplied' do
-      post = Post.create!(topic: topic)
+      post = Post.create(topic: topic)
       expect(post[:title]).to eq('Untitled')
       expect(post[:content]).to eq('')
       expect(post[:uuid]).to be_present
@@ -27,7 +27,7 @@ RSpec.describe Post, type: :model do
 
     it 'should create Post with supplied values' do
       post_obj = dummy_post_credentials(nil)
-      post = Post.create!(topic:topic, title: post_obj[:title], content: post_obj[:content] )
+      post = Post.create(topic: topic, title: post_obj[:title], content: post_obj[:content] )
       expect(post[:title]).to eq(post_obj[:title])
       expect(post[:content]).to eq(post_obj[:content])
       expect(post[:uuid]).to be_present
