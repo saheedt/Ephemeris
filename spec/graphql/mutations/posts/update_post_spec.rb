@@ -56,6 +56,14 @@ module Mutations
         expect(error).to include( "message" => MessagesHelper::Auth.invalid_token )
       end
 
+      it 'should return not found error if no-existing uuid is supplied' do
+        post '/graphql', params: { query: update_post_mutation(dummy_post_update_credentials("jcbshbca")) },
+             headers: { Authorization: token }
+        json = JSON.parse(response.body)
+        error = json['errors'][0]
+        expect(error).to include( "message" => MessagesHelper::Resource.not_found(PostHelper::Posts.resource_name) )
+      end
+
       it 'should successfully update a post for a topic' do
         post '/graphql', params: { query: update_post_mutation(dummy_post_update_credentials(post_uuid)) },
              headers: { Authorization: token }

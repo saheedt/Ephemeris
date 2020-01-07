@@ -17,6 +17,11 @@ module PostHelper
       end
     end
 
+    def self.destroy(post_record)
+      destroyed = post_record.destroy
+      build_post_response(destroyed)
+    end
+
     def self.default_search_means(means="uuid")
       means
     end
@@ -29,6 +34,10 @@ module PostHelper
           "content": post_record[:content]
         }
       }
+    end
+
+    def self.resource_name
+      "Post"
     end
   end
 end

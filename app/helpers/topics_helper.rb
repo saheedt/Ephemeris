@@ -38,5 +38,9 @@ module TopicsHelper
         }
       }
     end
+
+    def self.resource_name
+      "Topic"
+    end
   end
 end

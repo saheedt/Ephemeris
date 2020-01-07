@@ -71,6 +71,14 @@ module Mutations
           expect(error).to include( "message" => MessagesHelper::Auth.user_unauthorized )
         end
 
+        it 'should return not found error if non-existing uuid is supplied' do
+          post '/graphql', params: { query: topic_mutation("deleteTopic", dummy_topic_credentials('', false, '')) },
+               headers: { Authorization: token }
+          json = JSON.parse(response.body)
+          error = json['errors'][0]
+          expect(error).to include( "message" => MessagesHelper::Resource.not_found(TopicsHelper::Topics.resource_name))
+        end
+
         it 'should successfully delete a topic with right credentials supplied' do
           post '/graphql', params: { query: topic_mutation("deleteTopic", dummy_topic_credentials('', false, topic_uuid)) },
                headers: { Authorization: token }
