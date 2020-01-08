@@ -37,7 +37,7 @@ module UsersHelper
     end
 
     def self.extract_post(user_obj, post_uuid)
-      post = user_obj.posts.map{ |post| post if post[:uuid] === post_uuid }.first
+      post = user_obj.posts.select{ |post| post if post[:uuid] === post_uuid }.first
       return build_extract_post_response(post) if post.present?
       verify_post_exists = Post.find_by("#{default_user_search_means}": post_uuid)
       return build_extract_post_response(nil, AUTH_MSG_HELPER.user_unauthorized) if post.blank? && verify_post_exists.present?
