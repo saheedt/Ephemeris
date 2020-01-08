@@ -22,4 +22,11 @@ module MessagesHelper
       "User is unauthorized to perform this action"
     end
   end
+
+  class Resource
+    def self.not_found(resource_type)
+      "#{resource_type} not found"
+    end
+  end
+
 end

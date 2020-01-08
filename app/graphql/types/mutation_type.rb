@@ -7,5 +7,6 @@ module Types
     field :delete_topic, mutation: Mutations::Topics::DeleteTopic
     field :create_post, mutation: Mutations::Posts::CreatePost
     field :update_post, mutation: Mutations::Posts::UpdatePost
+    field :delete_post, mutation: Mutations::Posts::DeletePost
   end
 end

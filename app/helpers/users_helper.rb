@@ -1,5 +1,9 @@
 module UsersHelper
   class Users
+    AUTH_MSG_HELPER = MessagesHelper::Auth
+    RESOURCE_MSG_HELPER = MessagesHelper::Resource
+    POST_HELPER = PostHelper::Posts
+
     def self.create(user_obj)
       user = User.new(email: user_obj[:email], password: user_obj[:password],
                       password_confirmation: user_obj[:password_confirmation],
@@ -33,7 +37,22 @@ module UsersHelper
     end
 
     def self.extract_post(user_obj, post_uuid)
-      user_obj.posts.map{ |post| post if post[:uuid] === post_uuid }
+      post = user_obj.posts.select{ |post| post if post[:uuid] === post_uuid }.first
+      return build_extract_post_response(post) if post.present?
+      verify_post_existence(post_uuid, post)
+    end
+
+    def self.verify_post_existence(post_uuid, post_obj)
+      verification =  Post.find_by("#{default_user_search_means}": post_uuid)
+      return build_extract_post_response(nil, AUTH_MSG_HELPER.user_unauthorized) if post_obj.blank? && verification.present?
+      build_extract_post_response(nil, RESOURCE_MSG_HELPER.not_found(POST_HELPER.resource_name)) if post_obj.blank? && verification.blank?
+    end
+
+    def self.build_extract_post_response(post, error_message = nil)
+      {
+        post: post,
+        error_message: error_message
+      }
     end
 
     def self.build_user_response(user_record, token)
@@ -50,6 +69,10 @@ module UsersHelper
         screen_name: user_record[:screen_name],
         name: user_record[:name]
       }
+    end
+
+    def self.resource_name
+      self.name.split("::").last.singularize
     end
   end
 end

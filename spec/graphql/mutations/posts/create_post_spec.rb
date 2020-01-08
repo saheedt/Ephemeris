@@ -35,7 +35,6 @@ module Mutations
         end
 
         it 'should not successfully create post with expired token' do
-          expired_token = 'eyJhbGciOiJIUzI1NiJ9.eyJ1dWlkIjoiMzc5OTAyYzEtMjczYy00Y2U2LWJkODMtNzQyMTNkMzI4MzkwIiwiZXhwIjoxNTc3MjE4MjQ1fQ.dhrjEf3JNf9Pa9YJXdzpAVcH9jitIsNdNOnCo7IqxIO'
           post '/graphql', params: { query: create_post_mutation(dummy_post_credentials(topic_uuid)) },
                headers: { Authorization: fake_token(expired_token) }
           json = JSON.parse(response.body)

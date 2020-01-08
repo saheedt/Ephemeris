@@ -40,7 +40,6 @@ module Mutations
       end
 
       it 'should not successfully update post with expired token' do
-        expired_token = 'eyJhbGciOiJIUzI1NiJ9.eyJ1dWlkIjoiMzc5OTAyYzEtMjczYy00Y2U2LWJkODMtNzQyMTNkMzI4MzkwIiwiZXhwIjoxNTc3MjE4MjQ1fQ.dhrjEf3JNf9Pa9YJXdzpAVcH9jitIsNdNOnCo7IqxSM'
         post '/graphql', params: { query: update_post_mutation(dummy_post_update_credentials(post_uuid)) },
              headers: { Authorization: fake_token(expired_token) }
         json = JSON.parse(response.body)
@@ -54,6 +53,14 @@ module Mutations
         json = JSON.parse(response.body)
         error = json['errors'][0]
         expect(error).to include( "message" => MessagesHelper::Auth.invalid_token )
+      end
+
+      it 'should return not found error if non-existing uuid is supplied' do
+        post '/graphql', params: { query: update_post_mutation(dummy_post_update_credentials("jcbshbca")) },
+             headers: { Authorization: token }
+        json = JSON.parse(response.body)
+        error = json['errors'][0]
+        expect(error).to include( "message" => MessagesHelper::Resource.not_found(PostHelper::Posts.resource_name) )
       end
 
       it 'should successfully update a post for a topic' do
@@ -80,7 +87,7 @@ module Mutations
                         )
       end
 
-      it 'should return User unauthorized error if a user tries to update post other than theirs' do
+      it 'should return update posts belonging to other users' do
         user_obj = { name: 'alt_user', screen_name: 'alt_user_p', email: 'alt_user@test.com',
                      password: '1234567890', password_confirmation: '1234567890' }
         create(:user, user_obj)

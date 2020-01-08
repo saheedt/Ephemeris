@@ -26,6 +26,11 @@ module TopicsHelper
       Topic.includes(relationship).find_by(type)
     end
 
+    def self.parse_title(incoming_title, default_title)
+      return default_title if incoming_title.blank?
+      incoming_title
+    end
+
     def self.default_topic_search_means(means = "uuid")
       means
     end
@@ -37,6 +42,10 @@ module TopicsHelper
           "title": topic_record[:title]
         }
       }
+    end
+
+    def self.resource_name
+      self.name.split("::").last.singularize
     end
   end
 end

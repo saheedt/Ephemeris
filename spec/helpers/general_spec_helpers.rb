@@ -128,6 +128,23 @@ module Helpers
       GQL
     end
 
+    def delete_post_mutation(post_uuid:)
+      <<~GQL
+        mutation {
+          deletePost(input: {
+            postUuid: "#{post_uuid}"
+          })
+          {
+            post {
+              uuid
+              title
+              content
+            }
+          }
+        }
+      GQL
+    end
+
     def dummy_login_credentials(email='test@test.com', password= '1234567890')
       {
         email: email,
@@ -167,6 +184,10 @@ module Helpers
     end
 
     def fake_token(token = 'eyJhbGciOiJIUzI1Nikh.eyJ1dWlkIjggjMzc5OTAyYzdgMjczYy00Y2U2LWJkODMtNzQyMTNkMzI4MzkwIiwiZXhwIjoxNTc3MjE4MjQ1fQ.dhrjEf3JNf9Pa9YJXdzpAVcH9jitIsNdNOnHD7IqxSJG')
+      token
+    end
+
+    def expired_token(token = "eyJhbGciOiJIUzI1NiJ9.eyJ1dWlkIjoiMzc5OTAyYzEtMjczYy00Y2U2LWJkODMtNzQyMTNkMzI4MzkwIiwiZXhwIjoxNTc3MjE4MjQ1fQ.dhrjEf3JNf9Pa9YJXdzpAVcH9jitIsNdNOnCo7IqxSM")
       token
     end
   end
