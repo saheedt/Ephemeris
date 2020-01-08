@@ -40,7 +40,7 @@ module TopicsHelper
     end
 
     def self.resource_name
-      "Topic"
+      self.name.split("::").last.singularize
     end
   end
 end

@@ -37,7 +37,7 @@ module PostHelper
     end
 
     def self.resource_name
-      "Post"
+      self.name.split("::").last.singularize
     end
   end
 end

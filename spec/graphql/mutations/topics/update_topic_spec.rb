@@ -66,6 +66,14 @@ module Mutations
           expect(error).to include( "message" => MessagesHelper::Auth.user_unauthorized )
         end
 
+        it 'should not update non-existing topic' do
+          post '/graphql', params: { query: topic_mutation("updateTopic", dummy_topic_credentials('', false, 'non-existing topic')) },
+               headers: { Authorization: token }
+          json = JSON.parse(response.body)
+          error = json['errors'][0]
+          expect(error).to include( "message" => MessagesHelper::Resource.not_found(TopicsHelper::Topics.resource_name))
+        end
+
         it 'should successfully update a topic without supplied credentials' do
           post '/graphql', params: { query: topic_mutation("updateTopic", dummy_topic_credentials('Fifth update test', false, topic_uuid)) },
                headers: { Authorization: token }

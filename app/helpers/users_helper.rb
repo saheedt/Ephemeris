@@ -68,7 +68,7 @@ module UsersHelper
     end
 
     def self.resource_name
-      "User"
+      self.name.split("::").last.singularize
     end
   end
 end
