@@ -74,7 +74,7 @@ module Mutations
           expect(error).to include( "message" => MessagesHelper::Resource.not_found(TopicsHelper::Topics.resource_name))
         end
 
-        it 'should successfully update a topic without supplied credentials' do
+        it 'should successfully update a topic with supplied credentials' do
           post '/graphql', params: { query: topic_mutation("updateTopic", dummy_topic_credentials('Fifth update test', false, topic_uuid)) },
                headers: { Authorization: token }
           json = JSON.parse(response.body)

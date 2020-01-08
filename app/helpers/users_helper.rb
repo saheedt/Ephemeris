@@ -39,9 +39,13 @@ module UsersHelper
     def self.extract_post(user_obj, post_uuid)
       post = user_obj.posts.select{ |post| post if post[:uuid] === post_uuid }.first
       return build_extract_post_response(post) if post.present?
-      verify_post_exists = Post.find_by("#{default_user_search_means}": post_uuid)
-      return build_extract_post_response(nil, AUTH_MSG_HELPER.user_unauthorized) if post.blank? && verify_post_exists.present?
-      return build_extract_post_response(nil, RESOURCE_MSG_HELPER.not_found(POST_HELPER.resource_name)) if post.blank? && verify_post_exists.blank?
+      verify_post_existence(post_uuid, post)
+    end
+
+    def self.verify_post_existence(post_uuid, post_obj)
+      verification =  Post.find_by("#{default_user_search_means}": post_uuid)
+      return build_extract_post_response(nil, AUTH_MSG_HELPER.user_unauthorized) if post_obj.blank? && verification.present?
+      build_extract_post_response(nil, RESOURCE_MSG_HELPER.not_found(POST_HELPER.resource_name)) if post_obj.blank? && verification.blank?
     end
 
     def self.build_extract_post_response(post, error_message = nil)

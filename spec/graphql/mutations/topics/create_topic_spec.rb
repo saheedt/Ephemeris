@@ -64,6 +64,17 @@ module Mutations
                              "title" => "second test"
                            )
         end
+
+        it 'should successfully create a topic with untitled if an empty title is supplied' do
+          post '/graphql', params: { query: topic_mutation("createTopic", dummy_topic_credentials('', false)) },
+               headers: { Authorization: token }
+          json = JSON.parse(response.body)
+          topic = json['data']['createTopic']['topic']
+          expect(topic).to include(
+                             "uuid" => be_present,
+                             "title" => "Untitled"
+                           )
+        end
       end
     end
   end
