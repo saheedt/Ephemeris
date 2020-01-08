@@ -22,7 +22,7 @@ module Mutations
         topic = TOPIC_HELPER.fetch_with_relationship_by({"#{search_means}": topic_uuid} , :user)
         return EXCEPTION_HANDLER.new(RESOURCE_HELPER.not_found(TOPIC_HELPER.resource_name)) if topic.blank?
         return EXCEPTION_HANDLER.new(AUTH_MSG_HELPER.user_unauthorized) unless auth.isAuthorized?(topic.user[:uuid])
-        title = DEFAULT_TOPIC_TITLE if title.blank?
+        title = TOPIC_HELPER.parse_title(title, DEFAULT_TOPIC_TITLE)
         TOPIC_HELPER.update(topic, { title: title, is_public: is_public })
       end
     end

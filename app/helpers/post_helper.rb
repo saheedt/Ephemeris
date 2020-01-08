@@ -22,6 +22,11 @@ module PostHelper
       build_post_response(destroyed)
     end
 
+    def self.parse_title(incoming_title, default_title)
+      return default_title if incoming_title.blank?
+      incoming_title
+    end
+
     def self.default_search_means(means="uuid")
       means
     end

@@ -5,6 +5,7 @@ module Mutations
       TOPIC_HELPER = TopicsHelper::Topics
       EXCEPTION_HANDLER = ExceptionHandlerHelper::GQLCustomError
       AUTH_MSG_HELPER = MessagesHelper::Auth
+      POST_HELPER = PostHelper::Posts
       DEFAULT_POST_TITLE = "Untitled"
       DEFAULT_CONTENT = ""
 
@@ -22,8 +23,8 @@ module Mutations
         topic = TOPIC_HELPER.fetch_with_relationship_by({"#{search_means}": topic_uuid} , :user)
         topic_owner = topic.user
         return EXCEPTION_HANDLER.new(MessagesHelper::Auth.user_unauthorized) unless auth.isAuthorized?(topic_owner[:uuid])
-        title = DEFAULT_POST_TITLE if title.blank?
-        PostHelper::Posts.create(title, content, topic[:id])
+        title = POST_HELPER.parse_title(title, DEFAULT_POST_TITLE)
+        POST_HELPER.create(title, content, topic[:id])
       end
     end
   end

@@ -24,7 +24,7 @@ module Mutations
         extracted_post = USERS_HELPER.extract_post(current_user, post_uuid)
         post = extracted_post[:post]
         return EXCEPTION_HANDLER.new(extracted_post[:error_message]) if post.blank?
-        title = DEFAULT_POST_TITLE if title.blank?
+        title = POST_HELPER.parse_title(title, DEFAULT_POST_TITLE)
         POST_HELPER.update(post, {title: title, content: content})
       end
     end

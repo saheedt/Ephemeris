@@ -18,7 +18,7 @@ module Mutations
         if token_data[:verified?]
           search_means = USER_HELPER.default_user_search_means
           current_user_id = USER_HELPER.fetch_by("#{search_means}": token_data[:verified_user][:uuid])[:id]
-          title = DEFAULT_TOPIC_TITLE if title.blank?
+          title = TOPIC_HELPER.parse_title(title, DEFAULT_TOPIC_TITLE)
           TOPIC_HELPER.create(title, is_public, current_user_id)
         else
           EXCEPTION_HANDLER.new(MessagesHelper::Auth.token_verification_error)
