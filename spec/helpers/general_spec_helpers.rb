@@ -187,8 +187,8 @@ module Helpers
       token
     end
 
-    def expired_token
-      "eyJhbGciOiJIUzI1NiJ9.eyJ1dWlkIjoiMzc5OTAyYzEtMjczYy00Y2U2LWJkODMtNzQyMTNkMzI4MzkwIiwiZXhwIjoxNTc3MjE4MjQ1fQ.dhrjEf3JNf9Pa9YJXdzpAVcH9jitIsNdNOnCo7IqxSM"
+    def expired_token(token = "eyJhbGciOiJIUzI1NiJ9.eyJ1dWlkIjoiMzc5OTAyYzEtMjczYy00Y2U2LWJkODMtNzQyMTNkMzI4MzkwIiwiZXhwIjoxNTc3MjE4MjQ1fQ.dhrjEf3JNf9Pa9YJXdzpAVcH9jitIsNdNOnCo7IqxSM")
+      token
     end
   end
 end
