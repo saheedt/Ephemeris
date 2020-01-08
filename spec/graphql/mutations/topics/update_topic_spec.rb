@@ -41,7 +41,6 @@ module Mutations
         end
 
         it 'should not update a topic with an expired token' do
-          expired_token = 'eyJhbGciOiJIUzI1NiJ9.eyJ1dWlkIjoiMzc5OTAyYzEtMjczYy00Y2U2LWJkODMtNzQyMTNkMzI4MzkwIiwiZXhwIjoxNTc3MjE4MjQ1fQ.dhrjEf3JNf9Pa9YJXdzpAVcH9jitIsNdNOnCo7IqxJS'
           post '/graphql', params: { query: topic_mutation("updateTopic", dummy_topic_credentials('third update test', false, topic_uuid)) },
                headers: { Authorization: fake_token(expired_token) }
           json = JSON.parse(response.body)
