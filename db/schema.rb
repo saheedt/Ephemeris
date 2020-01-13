@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_12_16_145052) do
+ActiveRecord::Schema.define(version: 2020_01_09_191445) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "pgcrypto"
@@ -21,6 +21,7 @@ ActiveRecord::Schema.define(version: 2019_12_16_145052) do
     t.uuid "uuid", null: false
     t.string "title", default: "Untitled", null: false
     t.text "content", default: "", null: false
+    t.boolean "is_public", default: false, null: false
     t.index ["topic_id"], name: "index_posts_on_topic_id"
     t.index ["uuid"], name: "index_posts_on_uuid", unique: true
   end

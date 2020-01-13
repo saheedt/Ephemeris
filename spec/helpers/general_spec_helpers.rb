@@ -167,11 +167,12 @@ module Helpers
       end
     end
 
-    def dummy_post_credentials(topic_uuid=nil, title='test post', content='my test content')
+    def dummy_post_credentials(topic_uuid=nil, title='test post', content='my test content', is_public=false)
       {
        title: title,
        content: content,
-       topic_uuid: topic_uuid
+       topic_uuid: topic_uuid,
+       is_public: is_public
       }
     end
 

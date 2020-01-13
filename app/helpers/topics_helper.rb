@@ -1,5 +1,5 @@
 module TopicsHelper
-  class Topics
+  class Topics < BaseHelper::Base
     def self.create(title, is_public, user_id)
       topic = Topic.new(title: title, is_public: is_public, user_id: user_id)
       if topic.save
@@ -10,6 +10,7 @@ module TopicsHelper
     end
 
     def self.update(model, new_record)
+      model.posts.update_all(is_public: new_record[:is_public]) unless new_record[:is_public]
       if model.update(new_record)
         build_topic_response(model)
       else
@@ -26,15 +27,6 @@ module TopicsHelper
       Topic.includes(relationship).find_by(type)
     end
 
-    def self.parse_title(incoming_title, default_title)
-      return default_title if incoming_title.blank?
-      incoming_title
-    end
-
-    def self.default_topic_search_means(means = "uuid")
-      means
-    end
-
     def self.build_topic_response(topic_record)
       {
         "topic": {
@@ -42,10 +34,6 @@ module TopicsHelper
           "title": topic_record[:title]
         }
       }
-    end
-
-    def self.resource_name
-      self.name.split("::").last.singularize
     end
   end
 end
