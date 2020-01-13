@@ -9,7 +9,6 @@ module Mutations
 
       field :user, Types::UserType, null: true
       field :token, String, null: true
-      # field :errors, [String], null: true
 
       def resolve(email:, password:, password_confirmation:, screen_name:, name:)
         user_obj = { 'email': email, 'password': password,

@@ -87,7 +87,7 @@ module Mutations
                         )
       end
 
-      it 'should return update posts belonging to other users' do
+      it 'should not successfully update posts belonging to other users' do
         user_obj = { name: 'alt_user', screen_name: 'alt_user_p', email: 'alt_user@test.com',
                      password: '1234567890', password_confirmation: '1234567890' }
         create(:user, user_obj)

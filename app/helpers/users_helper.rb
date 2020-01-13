@@ -1,5 +1,5 @@
 module UsersHelper
-  class Users
+  class Users < BaseHelper::Base
     AUTH_MSG_HELPER = MessagesHelper::Auth
     RESOURCE_MSG_HELPER = MessagesHelper::Resource
     POST_HELPER = PostHelper::Posts
@@ -32,10 +32,6 @@ module UsersHelper
       User.includes(relationship).find_by(type)
     end
 
-    def self.default_user_search_means(means = "uuid")
-      means
-    end
-
     def self.extract_post(user_obj, post_uuid)
       post = user_obj.posts.select{ |post| post if post[:uuid] === post_uuid }.first
       return build_extract_post_response(post) if post.present?
@@ -43,7 +39,7 @@ module UsersHelper
     end
 
     def self.verify_post_existence(post_uuid, post_obj)
-      verification =  Post.find_by("#{default_user_search_means}": post_uuid)
+      verification =  Post.find_by("#{default_search_means}": post_uuid)
       return build_extract_post_response(nil, AUTH_MSG_HELPER.user_unauthorized) if post_obj.blank? && verification.present?
       build_extract_post_response(nil, RESOURCE_MSG_HELPER.not_found(POST_HELPER.resource_name)) if post_obj.blank? && verification.blank?
     end
@@ -69,10 +65,6 @@ module UsersHelper
         screen_name: user_record[:screen_name],
         name: user_record[:name]
       }
-    end
-
-    def self.resource_name
-      self.name.split("::").last.singularize
     end
   end
 end

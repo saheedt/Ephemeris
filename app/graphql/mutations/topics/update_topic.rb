@@ -18,8 +18,8 @@ module Mutations
         auth = AUTH_HELPER.new(context[:current_user][:token])
         token_data = auth.verify_token
         return EXCEPTION_HANDLER.new(AUTH_MSG_HELPER.token_verification_error) unless token_data[:verified?]
-        search_means = TOPIC_HELPER.default_topic_search_means
-        topic = TOPIC_HELPER.fetch_with_relationship_by({"#{search_means}": topic_uuid} , :user)
+        search_means = TOPIC_HELPER.default_search_means
+        topic = TOPIC_HELPER.fetch_with_relationship_by({"#{search_means}": topic_uuid} , :user, :posts)
         return EXCEPTION_HANDLER.new(RESOURCE_HELPER.not_found(TOPIC_HELPER.resource_name)) if topic.blank?
         return EXCEPTION_HANDLER.new(AUTH_MSG_HELPER.user_unauthorized) unless auth.isAuthorized?(topic.user[:uuid])
         title = TOPIC_HELPER.parse_title(title, DEFAULT_TOPIC_TITLE)

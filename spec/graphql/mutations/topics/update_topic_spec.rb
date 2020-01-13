@@ -5,6 +5,7 @@ module Mutations
       describe '.resolve' do
         token = nil
         topic_uuid = nil
+        post_uuid = nil
         before(:all) do
           create(:user)
           post '/graphql', params: { query: login_mutation(dummy_login_credentials) }
@@ -17,6 +18,17 @@ module Mutations
                headers: { Authorization: token }
           json = JSON.parse(response.body)
           topic_uuid = json['data']['createTopic']['topic']['uuid']
+        end
+
+        before(:each) do
+          post '/graphql', params: { query: create_post_mutation(dummy_post_credentials(topic_uuid, 'test post', 'test content', true)) },
+               headers: { Authorization: token }
+          json = JSON.parse(response.body)
+          post_uuid = json['data']['createPost']['post']['uuid']
+        end
+
+        after(:each) do
+          Post.destroy_all
         end
 
         after(:all) do
@@ -75,7 +87,7 @@ module Mutations
         end
 
         it 'should successfully update a topic with supplied credentials' do
-          post '/graphql', params: { query: topic_mutation("updateTopic", dummy_topic_credentials('Fifth update test', false, topic_uuid)) },
+          post '/graphql', params: { query: topic_mutation("updateTopic", dummy_topic_credentials('Fifth update test', true, topic_uuid)) },
                headers: { Authorization: token }
           json = JSON.parse(response.body)
           topic = json['data']['updateTopic']['topic']
@@ -90,10 +102,12 @@ module Mutations
                headers: { Authorization: token }
           json = JSON.parse(response.body)
           topic = json['data']['updateTopic']['topic']
+          post = Topic.find_by("uuid": topic_uuid).posts.first
           expect(topic).to include(
                              "uuid" => be_present,
                              "title" => "Untitled"
                            )
+          expect(post[:is_public]).to eq(false)
         end
       end
     end

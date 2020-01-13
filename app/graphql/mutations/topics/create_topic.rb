@@ -16,7 +16,7 @@ module Mutations
         auth = AUTH_HELPER.new(context[:current_user][:token])
         token_data = auth.verify_token
         if token_data[:verified?]
-          search_means = USER_HELPER.default_user_search_means
+          search_means = USER_HELPER.default_search_means
           current_user_id = USER_HELPER.fetch_by("#{search_means}": token_data[:verified_user][:uuid])[:id]
           title = TOPIC_HELPER.parse_title(title, DEFAULT_TOPIC_TITLE)
           TOPIC_HELPER.create(title, is_public, current_user_id)
