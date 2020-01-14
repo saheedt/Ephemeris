@@ -22,6 +22,11 @@ module PostHelper
       build_post_response(destroyed)
     end
 
+    def self.infer_visibility_status(topic_record, new_visibility_status)
+      return topic_record[:is_public] unless topic_record[:is_public]
+      new_visibility_status
+    end
+
     def self.build_post_response(post_record)
       {
         "post": {
