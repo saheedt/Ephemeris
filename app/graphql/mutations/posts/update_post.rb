@@ -7,6 +7,7 @@ module Mutations
       POST_HELPER = PostHelper::Posts
       USERS_HELPER = UsersHelper::Users
       DEFAULT_POST_TITLE = "Untitled"
+      DEFAULT_VISIBILITY_STATUS = false
 
       argument :post_uuid, String, required: true
       argument :content, String, required: false
@@ -15,7 +16,7 @@ module Mutations
 
       field :post, Types::PostType, null: true
 
-      def resolve(title: DEFAULT_POST_TITLE, content:, is_public: false, post_uuid:)
+      def resolve(title: DEFAULT_POST_TITLE, content:, is_public: DEFAULT_VISIBILITY_STATUS, post_uuid:)
         auth = AUTH_HELPER.new(context[:current_user][:token])
         token_data = auth.verify_token
         return EXCEPTION_HANDLER.new(AUTH_MSG_HELPER.token_verification_error) unless token_data[:verified?]

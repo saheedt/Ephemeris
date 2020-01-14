@@ -1,7 +1,7 @@
 module PostHelper
   class Posts < BaseHelper::Base
-    def self.create(title, content, topic_id)
-      post = Post.new(title: title, content: content, topic_id: topic_id)
+    def self.create(title, content, is_public, topic_id)
+      post = Post.new(title: title, content: content, is_public: is_public, topic_id: topic_id)
       if post.save
        build_post_response(post)
       else
