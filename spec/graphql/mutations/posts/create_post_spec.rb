@@ -17,7 +17,7 @@ module Mutations
         end
 
         before(:each) do
-          post '/graphql', params: { query: topic_mutation("createTopic", dummy_topic_credentials('successful')) },
+          post '/graphql', params: { query: topic_mutation("createTopic", dummy_topic_credentials('successful', false)) },
                headers: { Authorization: token }
           json = JSON.parse(response.body)
           topic_uuid = json['data']['createTopic']['topic']['uuid']
@@ -84,6 +84,16 @@ module Mutations
                             "title" => "Untitled",
                             "content" => ""
                           )
+        end
+
+        it 'should successfully create post with the visibility status' do
+          post '/graphql', params: { query: create_post_mutation(dummy_post_credentials(topic_uuid, "", nil, true)) },
+               headers: { Authorization: token }
+          json = JSON.parse(response.body)
+          post = json['data']['createPost']['post']
+
+          post_record = Post.find_by("uuid": post["uuid"])
+          expect(post_record[:is_public]).to be(false)
         end
 
         it 'should return User unauthorized error if a user tries to add post to topic other than theirs' do
