@@ -96,6 +96,7 @@ module Helpers
           createPost(input: {
             title: "#{post[:title]}"
             content: "#{post[:content]}"
+            isPublic: #{post[:is_public]}
             topicUuid: "#{post[:topic_uuid]}"
           })
           {
@@ -115,6 +116,7 @@ module Helpers
           updatePost(input: {
             title: "#{post[:title]}"
             content: "#{post[:content]}"
+            isPublic: #{post[:is_public]}
             postUuid: "#{post[:post_uuid]}"
           })
           {
@@ -171,15 +173,16 @@ module Helpers
       {
        title: title,
        content: content,
-       topic_uuid: topic_uuid,
-       is_public: is_public
+       is_public: is_public,
+       topic_uuid: topic_uuid
       }
     end
 
-    def dummy_post_update_credentials(post_uuid=nil, title='update post', content='update my test content')
+    def dummy_post_update_credentials(post_uuid=nil, title='update post', content='update my test content', is_public=false)
       {
         title: title,
         content: content,
+        is_public: is_public,
         post_uuid: post_uuid
       }
     end
