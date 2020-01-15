@@ -26,9 +26,10 @@ module Mutations
         extracted_post = USERS_HELPER.extract_post(current_user, post_uuid)
         post = extracted_post[:post]
         return EXCEPTION_HANDLER.new(extracted_post[:error_message]) if post.blank?
+        topic = post.topic
         title = POST_HELPER.parse_title(title, DEFAULT_POST_TITLE)
-        is_public = POST_HELPER.infer_visibility_status(post.topic, is_public)
-        POST_HELPER.update(post, {title: title, content: content, is_public: is_public})
+        is_public = POST_HELPER.infer_visibility_status(topic, is_public)
+        POST_HELPER.update(post, topic[:uuid], {title: title, content: content, is_public: is_public})
       end
     end
   end

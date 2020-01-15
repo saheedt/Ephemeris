@@ -104,6 +104,7 @@ module Helpers
               uuid
               title
               content
+              topicUuid
             }
           }
         }
@@ -124,6 +125,7 @@ module Helpers
               uuid
               title
               content
+              topicUuid
             }
           }
         }
@@ -141,6 +143,7 @@ module Helpers
               uuid
               title
               content
+              topicUuid
             }
           }
         }
