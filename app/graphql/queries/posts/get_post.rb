@@ -6,9 +6,10 @@ module Queries
       EXCEPTION_HANDLER = ExceptionHandlerHelper::GQLCustomError
       POST_HELPER = PostHelper::Posts
       USERS_HELPER = UsersHelper::Users
+
       description "Fetch a post"
+
       type Types::PostType, null: true
-      # field :post, Types::PostType, null: true
 
       argument :post_uuid, String, required: true
 

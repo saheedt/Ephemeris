@@ -33,6 +33,7 @@ module PostHelper
 
     def self.fetch_post_with_auth(post_uuid, current_user)
       post = Post.includes(:topic).find_by("#{default_search_means}": post_uuid)
+      return EXCEPTION_HANDLER.new(RESOURCE_MSG_HELPER.not_found(resource_name)) if post.blank?
       parent_topic = post.topic
       resource_owner = parent_topic.user
       return EXCEPTION_HANDLER.new(RESOURCE_MSG_HELPER.not_found(resource_name)) if !post[:is_public] && resource_owner[:uuid] != current_user[:uuid]
@@ -42,6 +43,7 @@ module PostHelper
 
     def self.fetch_post_without_auth(post_uuid)
       post = Post.includes(:topic).find_by("#{default_search_means}": post_uuid)
+      return EXCEPTION_HANDLER.new(RESOURCE_MSG_HELPER.not_found(resource_name)) if post.blank?
       parent_topic = post.topic
       return EXCEPTION_HANDLER.new(RESOURCE_MSG_HELPER.not_found(resource_name)) unless post[:is_public]
       return EXCEPTION_HANDLER.new(RESOURCE_MSG_HELPER.not_found(resource_name)) unless parent_topic[:is_public]

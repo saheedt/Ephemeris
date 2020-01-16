@@ -150,6 +150,19 @@ module Helpers
       GQL
     end
 
+    def get_post_query(post_uuid:)
+      <<~GQL
+        query {
+          post(postUuid: "#{post_uuid}") {
+            uuid
+            title
+            content
+            topicUuid
+          }
+        }
+      GQL
+    end
+
     def dummy_login_credentials(email='test@test.com', password= '1234567890')
       {
         email: email,
