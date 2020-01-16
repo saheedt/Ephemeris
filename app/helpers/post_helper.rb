@@ -26,24 +26,23 @@ module PostHelper
       build_post_response(destroyed, topic_uuid)
     end
 
-    def self.get(post_uuid, current_user = nil)
-      return fetch_post_with_auth(post_uuid, current_user) if current_user.present?
-      fetch_post_without_auth(post_uuid)
-    end
-
-    def self.fetch_post_with_auth(post_uuid, current_user)
+    def self.get(post_uuid, current_user_uuid = nil)
       post = Post.includes(:topic).find_by("#{default_search_means}": post_uuid)
       return EXCEPTION_HANDLER.new(RESOURCE_MSG_HELPER.not_found(resource_name)) if post.blank?
+      return fetch_post_with_auth(post, current_user_uuid) if current_user_uuid.present?
+      fetch_post_without_auth(post)
+    end
+
+    def self.fetch_post_with_auth(post, current_user_uuid)
       parent_topic = post.topic
       resource_owner = parent_topic.user
-      return EXCEPTION_HANDLER.new(RESOURCE_MSG_HELPER.not_found(resource_name)) if !post[:is_public] && resource_owner[:uuid] != current_user[:uuid]
-      return EXCEPTION_HANDLER.new(RESOURCE_MSG_HELPER.not_found(resource_name)) if !parent_topic[:is_public] && resource_owner[:uuid] != current_user[:uuid]
+      is_resource_owner = resource_owner[:uuid] === current_user_uuid
+      return EXCEPTION_HANDLER.new(RESOURCE_MSG_HELPER.not_found(resource_name)) if !post[:is_public] && !is_resource_owner
+      return EXCEPTION_HANDLER.new(RESOURCE_MSG_HELPER.not_found(resource_name)) if !parent_topic[:is_public] && !is_resource_owner
       build_post_query_response(post, parent_topic[:uuid])
     end
 
-    def self.fetch_post_without_auth(post_uuid)
-      post = Post.includes(:topic).find_by("#{default_search_means}": post_uuid)
-      return EXCEPTION_HANDLER.new(RESOURCE_MSG_HELPER.not_found(resource_name)) if post.blank?
+    def self.fetch_post_without_auth(post)
       parent_topic = post.topic
       return EXCEPTION_HANDLER.new(RESOURCE_MSG_HELPER.not_found(resource_name)) unless post[:is_public]
       return EXCEPTION_HANDLER.new(RESOURCE_MSG_HELPER.not_found(resource_name)) unless parent_topic[:is_public]
