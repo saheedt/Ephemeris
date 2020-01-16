@@ -27,7 +27,7 @@ module Mutations
         return EXCEPTION_HANDLER.new(MessagesHelper::Auth.user_unauthorized) unless auth.isAuthorized?(topic_owner[:uuid])
         title = POST_HELPER.parse_title(title, DEFAULT_POST_TITLE)
         is_public = POST_HELPER.infer_visibility_status(topic, is_public)
-        POST_HELPER.create(title, content, is_public, topic[:id])
+        POST_HELPER.create(title, content, is_public, topic)
       end
     end
   end

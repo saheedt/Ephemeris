@@ -104,6 +104,7 @@ module Helpers
               uuid
               title
               content
+              topicUuid
             }
           }
         }
@@ -124,6 +125,7 @@ module Helpers
               uuid
               title
               content
+              topicUuid
             }
           }
         }
@@ -141,7 +143,21 @@ module Helpers
               uuid
               title
               content
+              topicUuid
             }
+          }
+        }
+      GQL
+    end
+
+    def get_post_query(post_uuid:)
+      <<~GQL
+        query {
+          post(postUuid: "#{post_uuid}") {
+            uuid
+            title
+            content
+            topicUuid
           }
         }
       GQL

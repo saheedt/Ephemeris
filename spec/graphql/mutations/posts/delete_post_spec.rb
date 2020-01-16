@@ -93,7 +93,8 @@ module Mutations
         expect(post).to include(
                           "uuid" => be_present,
                           "title" => "Untitled",
-                          "content" => dummy_post_credentials[:content]
+                          "content" => dummy_post_credentials[:content],
+                          "topicUuid" => be_present
                         )
       end
 
@@ -105,7 +106,8 @@ module Mutations
         expect(post).to include(
                           "uuid" => be_present,
                           "title" => dummy_post_credentials[:title],
-                          "content" => dummy_post_credentials[:content]
+                          "content" => dummy_post_credentials[:content],
+                          "topicUuid" => be_present
                         )
       end
 

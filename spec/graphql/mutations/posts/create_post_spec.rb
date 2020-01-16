@@ -50,52 +50,6 @@ module Mutations
           expect(error).to include( "message" => MessagesHelper::Auth.invalid_token )
         end
 
-        it 'should successfully create a post for a topic' do
-          post '/graphql', params: { query: create_post_mutation(dummy_post_credentials(topic_uuid)) },
-               headers: { Authorization: token }
-          json = JSON.parse(response.body)
-          post = json['data']['createPost']['post']
-          expect(post).to include(
-                            "uuid" => be_present,
-                            "title" => dummy_post_credentials[:title],
-                            "content" => dummy_post_credentials[:content]
-                          )
-        end
-
-        it 'should successfully create post with the right title in every situation' do
-          post '/graphql', params: { query: create_post_mutation(dummy_post_credentials(topic_uuid, "")) },
-               headers: { Authorization: token }
-          json = JSON.parse(response.body)
-          post = json['data']['createPost']['post']
-          expect(post).to include(
-                            "uuid" => be_present,
-                            "title" => "Untitled",
-                            "content" => dummy_post_credentials[:content]
-                          )
-        end
-
-        it 'should successfully create post with the right content in every situation' do
-          post '/graphql', params: { query: create_post_mutation(dummy_post_credentials(topic_uuid, "", nil)) },
-               headers: { Authorization: token }
-          json = JSON.parse(response.body)
-          post = json['data']['createPost']['post']
-          expect(post).to include(
-                            "uuid" => be_present,
-                            "title" => "Untitled",
-                            "content" => ""
-                          )
-        end
-
-        it 'should successfully create post with the visibility status' do
-          post '/graphql', params: { query: create_post_mutation(dummy_post_credentials(topic_uuid, "", nil, true)) },
-               headers: { Authorization: token }
-          json = JSON.parse(response.body)
-          post = json['data']['createPost']['post']
-
-          post_record = Post.find_by("uuid": post["uuid"])
-          expect(post_record[:is_public]).to be(false)
-        end
-
         it 'should return User unauthorized error if a user tries to add post to topic other than theirs' do
           user_obj = { name: 'alt_user', screen_name: 'alt_user_p', email: 'alt_user@test.com',
                        password: '1234567890', password_confirmation: '1234567890' }
@@ -110,6 +64,55 @@ module Mutations
           error = json['errors'][0]
 
           expect(error).to include( "message" => MessagesHelper::Auth.user_unauthorized )
+        end
+
+        it 'should successfully create a post for a topic' do
+          post '/graphql', params: { query: create_post_mutation(dummy_post_credentials(topic_uuid)) },
+               headers: { Authorization: token }
+          json = JSON.parse(response.body)
+          post = json['data']['createPost']['post']
+          expect(post).to include(
+                            "uuid" => be_present,
+                            "title" => dummy_post_credentials[:title],
+                            "content" => dummy_post_credentials[:content],
+                            "topicUuid" => be_present
+                          )
+        end
+
+        it 'should successfully create post with the right title in every situation' do
+          post '/graphql', params: { query: create_post_mutation(dummy_post_credentials(topic_uuid, "")) },
+               headers: { Authorization: token }
+          json = JSON.parse(response.body)
+          post = json['data']['createPost']['post']
+          expect(post).to include(
+                            "uuid" => be_present,
+                            "title" => "Untitled",
+                            "content" => dummy_post_credentials[:content],
+                            "topicUuid" => be_present
+                          )
+        end
+
+        it 'should successfully create post with the right content in every situation' do
+          post '/graphql', params: { query: create_post_mutation(dummy_post_credentials(topic_uuid, "", nil)) },
+               headers: { Authorization: token }
+          json = JSON.parse(response.body)
+          post = json['data']['createPost']['post']
+          expect(post).to include(
+                            "uuid" => be_present,
+                            "title" => "Untitled",
+                            "content" => "",
+                            "topicUuid" => be_present
+                          )
+        end
+
+        it 'should successfully create post with the visibility status' do
+          post '/graphql', params: { query: create_post_mutation(dummy_post_credentials(topic_uuid, "", nil, true)) },
+               headers: { Authorization: token }
+          json = JSON.parse(response.body)
+          post = json['data']['createPost']['post']
+
+          post_record = Post.find_by("uuid": post["uuid"])
+          expect(post_record[:is_public]).to be(false)
         end
       end
     end
