@@ -16,13 +16,10 @@ module Queries
       def resolve(post_uuid:)
         token = context[:current_user][:token]
         if token.present?
-          auth = AUTH_HELPER.new(context[:current_user][:token])
+          auth = AUTH_HELPER.new(token)
           token_data = auth.verify_token
           return EXCEPTION_HANDLER.new(AUTH_MSG_HELPER.token_verification_error) unless token_data[:verified?]
-          search_means = USERS_HELPER.default_search_means
-          current_user = USERS_HELPER.fetch_with_relationship_by({"#{search_means}": token_data[:verified_user][:uuid]},
-                                                                 :posts)
-          POST_HELPER.get(post_uuid, current_user)
+          POST_HELPER.get(post_uuid, token_data[:verified_user][:uuid])
         else
           POST_HELPER.get(post_uuid)
         end

@@ -12,5 +12,9 @@ module BaseHelper
     def self.default_search_means(means="uuid")
       means
     end
+
+    def self.strip_private(records)
+      records.select{ |record| record if record[:is_public] === true }
+    end
   end
 end

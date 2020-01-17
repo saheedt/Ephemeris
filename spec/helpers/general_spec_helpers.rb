@@ -163,6 +163,23 @@ module Helpers
       GQL
     end
 
+    def get_topic_query(topic_uuid:)
+      <<~GQL
+        query {
+          topic(topicUuid: "#{topic_uuid}") {
+            uuid
+            title
+            posts {
+              uuid
+              title
+              content
+              topicUuid
+            }
+          }
+        }
+      GQL
+    end
+
     def dummy_login_credentials(email='test@test.com', password= '1234567890')
       {
         email: email,
@@ -209,6 +226,16 @@ module Helpers
 
     def expired_token(token = "eyJhbGciOiJIUzI1NiJ9.eyJ1dWlkIjoiMzc5OTAyYzEtMjczYy00Y2U2LWJkODMtNzQyMTNkMzI4MzkwIiwiZXhwIjoxNTc3MjE4MjQ1fQ.dhrjEf3JNf9Pa9YJXdzpAVcH9jitIsNdNOnCo7IqxSM")
       token
+    end
+
+    def secondary_user
+      {
+        name: 'alt_user',
+        screen_name: 'alt_user_p',
+        email: 'alt_user@test.com',
+        password: '1234567890',
+        password_confirmation: '1234567890'
+      }
     end
   end
 end
