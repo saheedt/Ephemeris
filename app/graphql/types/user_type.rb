@@ -4,5 +4,6 @@ module Types
     field :email, String, null: false
     field :screen_name, String, null: false
     field :name, String, null: true
+    field :topics, [Types::TopicType],null: true
   end
 end

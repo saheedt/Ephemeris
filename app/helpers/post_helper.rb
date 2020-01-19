@@ -26,7 +26,7 @@ module PostHelper
       build_post_response(destroyed, topic_uuid)
     end
 
-    def self.get(post_uuid, current_user_uuid = nil)
+    def self.read(post_uuid, current_user_uuid = nil)
       post = Post.includes(:topic).find_by("#{default_search_means}": post_uuid)
       return EXCEPTION_HANDLER.new(RESOURCE_MSG_HELPER.not_found(resource_name)) if post.blank?
       return fetch_post_with_auth(post, current_user_uuid) if current_user_uuid.present?

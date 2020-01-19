@@ -153,7 +153,7 @@ module Helpers
     def get_post_query(post_uuid:)
       <<~GQL
         query {
-          post(postUuid: "#{post_uuid}") {
+          post(uuid: "#{post_uuid}") {
             uuid
             title
             content
@@ -166,7 +166,7 @@ module Helpers
     def get_topic_query(topic_uuid:)
       <<~GQL
         query {
-          topic(topicUuid: "#{topic_uuid}") {
+          topic(uuid: "#{topic_uuid}") {
             uuid
             title
             posts {
@@ -174,6 +174,29 @@ module Helpers
               title
               content
               topicUuid
+            }
+          }
+        }
+      GQL
+    end
+
+    def get_user_query(user_uuid:)
+      <<~GQL
+        query {
+          user(uuid: "#{user_uuid}") {
+            uuid
+            email
+            screenName
+            name
+            topics {
+              uuid
+              title
+              posts {
+                uuid
+                title
+                content
+                topicUuid
+              }
             }
           }
         }

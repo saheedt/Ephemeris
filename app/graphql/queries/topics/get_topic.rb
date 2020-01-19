@@ -11,19 +11,19 @@ module Queries
 
       type Types::TopicType, null: false
 
-      argument :topic_uuid, String, required: true
+      argument :uuid, String, required: true
 
-      def resolve(topic_uuid:)
+      def resolve(uuid:)
         token = context[:current_user][:token]
         topic_search_means = TOPIC_HELPER.default_search_means
-        topic = TOPIC_HELPER.fetch_with_relationship_by({"#{topic_search_means}": topic_uuid }, :posts)
+        topic = TOPIC_HELPER.fetch_with_relationship_by({"#{topic_search_means}": uuid }, :posts)
         if token.present?
           auth = AUTH_HELPER.new(token)
           token_data = auth.verify_token
           return EXCEPTION_HANDLER.new(AUTH_MSG_HELPER.token_verification_error) unless token_data[:verified?]
-          TOPIC_HELPER.get(topic, token_data[:verified_user][:uuid])
+          TOPIC_HELPER.read(topic, token_data[:verified_user][:uuid])
         else
-          TOPIC_HELPER.get(topic)
+          TOPIC_HELPER.read(topic)
         end
       end
     end
