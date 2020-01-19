@@ -26,7 +26,7 @@ module TopicsHelper
       build_topic_response(destroyed)
     end
 
-    def self.get(topic_record, current_user_uuid = nil)
+    def self.read(topic_record, current_user_uuid = nil)
       return EXCEPTION_HANDLER.new(RESOURCE_MSG_HELPER.not_found(resource_name)) if topic_record.blank?
       return fetch_topic_with_auth(topic_record, current_user_uuid) if current_user_uuid.present?
       fetch_topic_without_auth(topic_record)
@@ -51,22 +51,7 @@ module TopicsHelper
     def self.build_topic_query_response(topic_record, is_resource_owner = false)
       posts = build_topic_posts_response(strip_private(topic_record.posts), topic_record[:uuid]) unless is_resource_owner
       posts = build_topic_posts_response(topic_record.posts, topic_record[:uuid]) if is_resource_owner
-      {
-        "uuid": topic_record[:uuid],
-        "title": topic_record[:title],
-        "posts": posts
-      }
-    end
-
-    def self.build_topic_posts_response(post_records, topic_uuid)
-      post_records.map do |post|
-        {
-          "uuid": post[:uuid],
-          "title": post[:title],
-          "content": post[:content],
-          "topic_uuid": topic_uuid
-        }
-      end
+      build_topic_posts_relationship_data(topic_record, posts)
     end
 
     def self.build_topic_response(topic_record)

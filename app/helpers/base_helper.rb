@@ -14,7 +14,26 @@ module BaseHelper
     end
 
     def self.strip_private(records)
-      records.select{ |record| record if record[:is_public] === true }
+      records.select{ |record| record if record[:is_public] }
+    end
+
+    def self.build_topic_posts_response(post_records, topic_uuid)
+      post_records.map do |post|
+        {
+          "uuid": post[:uuid],
+          "title": post[:title],
+          "content": post[:content],
+          "topic_uuid": topic_uuid
+        }
+      end
+    end
+
+    def self.build_topic_posts_relationship_data(topic, posts)
+      {
+        "uuid": topic[:uuid],
+        "title": topic[:title],
+        "posts": posts
+      }
     end
   end
 end
