@@ -44,7 +44,7 @@ npm run lint
 
 * Clone the app by running:
 ```
-  git clone https://github.com/Orelongz/Ephemeris.git
+  git clone https://github.com/saheedt/Ephemeris.git
 ```
 
 * Bundle the dependencies:
@@ -62,15 +62,3 @@ npm run lint
   rake db:create
   rake db:migrate
 ```
-
-* Install [hivemind](https://github.com/DarthSim/hivemind)
-```
-  brew install hivemind
-```
-
-* Run the application
-```
-  hivemind
-```
-
-The application should be running on `http://localhost:5000/`
